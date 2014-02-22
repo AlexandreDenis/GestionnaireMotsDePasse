@@ -51,6 +51,11 @@
                 Content="Supprimer un dossier"
                 Margin="10,10,10,10"
                 Click="onSupprimerDossierButtonClicked"/>
+                <Button 
+                Name="RenommerButton"
+                Content="Renommer"
+                Margin="10,10,10,10"
+                Click="onRenommerClicked"/>
                 <DockPanel>
                     <Label Content="Nb carac. pour le mdp :" DockPanel.Dock="Left"/>
                     <TextBox Name="inputNbCarac" Width="20" HorizontalAlignment="Left" DockPanel.Dock="Right" LostFocus="onNbCaracChanged"/>

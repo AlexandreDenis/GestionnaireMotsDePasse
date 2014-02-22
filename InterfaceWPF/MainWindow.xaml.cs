@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -69,16 +68,6 @@ namespace InterfaceWPF
             stackPanel.Children.Add(textBlock);
 
             return stackPanel;
-        }
-
-        private void onDoubleClickOnNode(object sender, MouseButtonEventArgs e)
-        {
-            StackPanel stackPanel = (StackPanel)((TreeViewItem)sender).Header;
-            TextBlock textBlock = (TextBlock)stackPanel.Children[1];
-
-            string title = Interaction.InputBox("Entrez le nouveau nom :", "Nom du noeud");
-
-            textBlock.Text = title;
         }
 
         /// <summary>
@@ -190,7 +179,7 @@ namespace InterfaceWPF
                 else
                     MessageBox.Show("Vous ne pouvez ajouter des clés qu'à des dossiers.");
             }
-            catch (InvalidCastException ex)
+            catch (InvalidCastException)
             {
                 MessageBox.Show("Vous ne pouvez ajouter des clés qu'à des dossiers.");
             }
@@ -470,6 +459,43 @@ namespace InterfaceWPF
             catch (InvalidCastException)
             {
                 MessageBox.Show("Veuillez sélectionner un dossier.");
+            }
+        }
+
+        private void onRenommerClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            try
+            {
+                TreeViewItem item = (TreeViewItem)Arborescence.SelectedItem;
+
+                if (Arborescence.SelectedItem != null)
+                {
+                    StackPanel stackPanel = (StackPanel)item.Header;
+                    TextBlock textBlock = (TextBlock)stackPanel.Children[1];
+
+                    string title = Interaction.InputBox("Entrez le nouveau nom :", "Nom du noeud");
+
+                    if (!isClé(item))
+                    {
+                        Groupe groupe = RechercherGroupe(_database.Root, textBlock.Text);
+                        groupe.Title = title;
+                    }
+                    else
+                    {
+                        Entry entry = RechercherEntry(_database.Root, textBlock.Text);
+                        entry.Title = title;
+                    }
+
+                    textBlock.Text = title;
+                }
+                else
+                {
+                    MessageBox.Show("Veuillez sélectionner l'élément à renommer.");
+                }
+            }
+            catch (InvalidCastException)
+            {
+                MessageBox.Show("Veuillez sélectionner l'élément à renommer.");
             }
         }
     }
