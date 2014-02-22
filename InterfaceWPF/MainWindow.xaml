@@ -28,8 +28,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Loaded="CreateTreeView"
-                Grid.Column="0"
-                />
+                Grid.Column="0"/>
         
             <StackPanel Grid.Column="1">
                 <Button 

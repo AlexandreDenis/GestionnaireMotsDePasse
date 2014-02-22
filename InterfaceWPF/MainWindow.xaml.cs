@@ -46,6 +46,30 @@ namespace InterfaceWPF
             inputNbCarac.Text = Entry.LenghtPassword.ToString();
         }
 
+        private StackPanel createHeader(string inText, bool isFolder)
+        {
+            StackPanel stackPanel = new StackPanel();
+            string imageFileName;
+
+            if (isFolder)
+                imageFileName = "Folder.png";
+            else
+                imageFileName = "Key.png";
+
+            stackPanel.Orientation = System.Windows.Controls.Orientation.Horizontal;
+
+            Image image = new Image();
+            image.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri("pack://application:,,,/InterfaceWPF;component/resources/" + imageFileName));
+
+            TextBlock textBlock = new TextBlock();
+            textBlock.Text = inText;
+
+            stackPanel.Children.Add(image);
+            stackPanel.Children.Add(textBlock);
+
+            return stackPanel;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -64,7 +88,9 @@ namespace InterfaceWPF
             TreeViewItem item;
 
             item = new TreeViewItem();
-            item.Header = _database.Root.Title;
+
+            item.Header = createHeader(_database.Root.Title, true);
+
             item.IsExpanded = true;
 
             RemplirGroupe(_database.Root, item);
@@ -85,7 +111,7 @@ namespace InterfaceWPF
             foreach(Groupe grp in inGroupe.Groups)
             {
                 item = new TreeViewItem();
-                item.Header = grp.Title;
+                item.Header = createHeader(grp.Title, true);
                 item.IsExpanded = true;
 
                 inItem.Items.Add(item);
@@ -96,7 +122,7 @@ namespace InterfaceWPF
             foreach(Entry entry in inGroupe.Entries)
             {
                 item = new TreeViewItem();
-                item.Header = entry.Title;
+                item.Header = createHeader(entry.Title, false);
 
                 affKey = new AffichageClé();
                 affKey.DataContext = entry;
@@ -131,10 +157,10 @@ namespace InterfaceWPF
                 if(!isClé(father))
                 {
                     //Recherche de l'élément de la Database correspondant à l'élément père
-                    Groupe groupePere = RechercherGroupe(_database.Root, (string)father.Header);
+                    Groupe groupePere = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)father.Header).Children[1]).Text);
 
                     newItem = new TreeViewItem();
-                    newItem.Header = title;
+                    newItem.Header = createHeader(title, false);
 
                     newEntry = new Entry();
                     newEntry.Title = title;
@@ -153,7 +179,7 @@ namespace InterfaceWPF
                 else
                     MessageBox.Show("Vous ne pouvez ajouter des clés qu'à des dossiers.");
             }
-            catch (InvalidCastException)
+            catch (InvalidCastException ex)
             {
                 MessageBox.Show("Vous ne pouvez ajouter des clés qu'à des dossiers.");
             }
@@ -379,10 +405,10 @@ namespace InterfaceWPF
                 if(!isClé(father))
                 {
                     //Recherche de l'élément de la Database correspondant à l'élément père
-                    Groupe groupePere = RechercherGroupe(_database.Root, (string)father.Header);
+                    Groupe groupePere = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)father.Header).Children[1]).Text);
 
                     newItem = new TreeViewItem();
-                    newItem.Header = title;
+                    newItem.Header = createHeader(title, true);
 
                     newGroupe = new Groupe();
                     newGroupe.Title = title;
