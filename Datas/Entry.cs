@@ -11,6 +11,13 @@ namespace Datas
     [Serializable]
     public class Entry : Node
     {
+        private static int lenghtPassword = 8;
+        public static int LenghtPassword
+        {
+            get { return Entry.lenghtPassword; }
+            set { Entry.lenghtPassword = value; }
+        }
+
         /// <summary>
         /// Mot de passe pour l'URL
         /// </summary>
@@ -53,7 +60,7 @@ namespace Datas
         {
             username = inUsername;
             url = inUrl;
-            GeneratePassword(8);
+            GeneratePassword(Entry.LenghtPassword);
         }
 
         /// <summary>
@@ -64,7 +71,7 @@ namespace Datas
         {
             username = "Unknown";
             url = "no url";
-            GeneratePassword(8);
+            GeneratePassword(Entry.LenghtPassword);
         }
 
         /// <summary>

@@ -4,7 +4,7 @@
         xmlns:controls="clr-namespace:InterfaceWPF"
         WindowStartupLocation="CenterScreen"
         Title="Gestionnaire de mots de passe"
-        Height="360" Width="450" MinHeight="380" MinWidth="470"
+        Height="360" Width="450" MinHeight="380" MinWidth="510"
         Closing="onClosing">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -41,6 +41,10 @@
                 Content="Supprimer une clé"
                 Margin="10,10,10,10"
                 Click="onSupprimerButtonClicked"/>
+                <DockPanel>
+                    <Label Content="Nb carac. pour le mdp :" DockPanel.Dock="Left"/>
+                    <TextBox Name="inputNbCarac" Width="20" HorizontalAlignment="Left" DockPanel.Dock="Right" LostFocus="onNbCaracChanged"/>
+                </DockPanel>
             </StackPanel>
         
         </Grid>

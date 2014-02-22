@@ -36,9 +36,14 @@ namespace InterfaceWPF
         public MainWindow()
         {
             _database = new Database(new Groupe("Root", null, new List<Entry>(), new List<Groupe>()));
-            _database.Root.AddGroup(new Groupe("Réseau", null, new List<Entry>(), new List<Groupe>()));
+            _database.Root.AddGroup(new Groupe("Applications", null, new List<Entry>(), new List<Groupe>()));
+            _database.Root.AddGroup(new Groupe("Internet", null, new List<Entry>(), new List<Groupe>()));
+            _database.Root.AddGroup(new Groupe("Machines", null, new List<Entry>(), new List<Groupe>()));
             _database.Root.Groups[0].AddEntry(new Entry("LocalUser", null, "localuser", "http://google.fr"));
+
             InitializeComponent();
+
+            inputNbCarac.Text = Entry.LenghtPassword.ToString();
         }
 
         /// <summary>
@@ -341,6 +346,20 @@ namespace InterfaceWPF
         private void onClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             GererFermetureProgramme(e);
+        }
+
+        private void onNbCaracChanged(object sender, System.Windows.RoutedEventArgs e)
+        {
+            try
+            {
+                int newValue = int.Parse(inputNbCarac.Text);
+                Entry.LenghtPassword = newValue;
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Valeur rentrée incorrecte");
+                inputNbCarac.Text = Entry.LenghtPassword.ToString();
+            }
         }
     }
 }
