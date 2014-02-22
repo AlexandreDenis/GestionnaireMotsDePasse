@@ -44,6 +44,7 @@ namespace DataStorage
             finally
             {
                 fs.Close();
+                fs.Dispose();
             }
 
             return db;
@@ -71,6 +72,7 @@ namespace DataStorage
             finally
             {
                 fs.Close();
+                fs.Dispose();
             }
         }
     }
