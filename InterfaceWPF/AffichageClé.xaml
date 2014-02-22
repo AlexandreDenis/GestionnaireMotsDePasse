@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="InterfaceWPF.AffichageClé"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" d:DesignWidth="220" Height="75">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+        <Label Name="labUrl" Content="URL" Grid.Row="0" Grid.Column="0"/>
+        <Label Name="labId" Content="Id" Grid.Row="1" Grid.Column="0"/>
+        <Label Name="labMdp" Content="Password" Grid.Row="2" Grid.Column="0"/>
+        <TextBox Name="inputUrl" Grid.Row="0" Grid.Column="1" Text="{Binding Url}"/>
+        <TextBox Name="inputId" Grid.Row="1" Grid.Column="1" Text="{Binding Username}"/>
+        <TextBox Name="inputMdp" Grid.Row="2" Grid.Column="1" Text="{Binding Password}"/>
+    </Grid>
+</UserControl>
