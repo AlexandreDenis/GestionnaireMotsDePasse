@@ -11,6 +11,7 @@
             <MenuItem Header="Fichier">
                 <MenuItem Header="Ouvrir" Click="onOuvrirClicked"/>
                 <MenuItem Header="Enregistrer" Click="onEnregistrerClicked"/>
+                <Separator />
                 <MenuItem Header="Quitter" Click="onQuitterClicked"/>
             </MenuItem>
         </Menu>
@@ -41,6 +42,16 @@
                 Content="Supprimer une clé"
                 Margin="10,10,10,10"
                 Click="onSupprimerButtonClicked"/>
+                <Button 
+                Name="AjouterDossierButton"
+                Content="Ajouter un dossier"
+                Margin="10,10,10,10"
+                Click="onAjouterDossierButtonClicked"/>
+                <Button 
+                Name="SupprimerDossierButton"
+                Content="Supprimer un dossier"
+                Margin="10,10,10,10"
+                Click="onSupprimerDossierButtonClicked"/>
                 <DockPanel>
                     <Label Content="Nb carac. pour le mdp :" DockPanel.Dock="Left"/>
                     <TextBox Name="inputNbCarac" Width="20" HorizontalAlignment="Left" DockPanel.Dock="Right" LostFocus="onNbCaracChanged"/>

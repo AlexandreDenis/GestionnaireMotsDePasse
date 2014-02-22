@@ -196,7 +196,6 @@ namespace InterfaceWPF
             {
                 MessageBox.Show("Veuillez sélectionner une clé.");
             }
-           
         }
 
         /// <summary>
@@ -359,6 +358,81 @@ namespace InterfaceWPF
             {
                 MessageBox.Show("Valeur rentrée incorrecte");
                 inputNbCarac.Text = Entry.LenghtPassword.ToString();
+            }
+        }
+
+        private void onAjouterDossierButtonClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            TreeViewItem father;
+            TreeViewItem newItem;
+            Groupe newGroupe;
+
+            string title = Interaction.InputBox("Entrez le nom du nouveau dossier :", "Nom du nouveau dossier");
+
+            try
+            {
+                if (Arborescence.SelectedItem != null)
+                    father = (TreeViewItem)Arborescence.SelectedItem;
+                else
+                    father = (TreeViewItem)Arborescence.Items[0];
+
+                if(!isClé(father))
+                {
+                    //Recherche de l'élément de la Database correspondant à l'élément père
+                    Groupe groupePere = RechercherGroupe(_database.Root, (string)father.Header);
+
+                    newItem = new TreeViewItem();
+                    newItem.Header = title;
+
+                    newGroupe = new Groupe();
+                    newGroupe.Title = title;
+                    if (groupePere != null)
+                    {
+                        groupePere.Groups.Add(newGroupe);
+                    }
+
+                    father.Items.Add(newItem);
+                }
+                else
+                    MessageBox.Show("Vous ne pouvez ajouter des dossiers qu'à des dossiers.");
+            }
+            catch (InvalidCastException)
+            {
+                MessageBox.Show("Vous ne pouvez ajouter des dossiers qu'à des dossiers.");
+            }
+        }
+
+        private void onSupprimerDossierButtonClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            try
+            {
+                TreeViewItem item = (TreeViewItem)Arborescence.SelectedItem;
+
+                if (Arborescence.SelectedItem != null)
+                {
+                    if (!isClé(item))
+                    {
+                        Groupe father = RechercherGroupe(_database.Root, (string)((item.Parent as TreeViewItem).Header));
+
+                        if (father != null)
+                        {
+                            Groupe groupToDelete = RechercherGroupe(father, (string)item.Header);
+
+                            father.Groups.Remove(groupToDelete);
+
+                            if (item.Parent is TreeViewItem)
+                                (item.Parent as TreeViewItem).Items.Remove(item);
+                        }
+                    }
+                    else
+                        MessageBox.Show("Veuillez sélectionner un dossier.");
+                }
+                else
+                    MessageBox.Show("Veuillez sélectionner le dossier à supprimer");
+            }
+            catch (InvalidCastException)
+            {
+                MessageBox.Show("Veuillez sélectionner un dossier.");
             }
         }
     }
