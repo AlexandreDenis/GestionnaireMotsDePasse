@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -13,9 +14,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.VisualBasic;
+using System.Windows.Forms;
 
 using Datas;
-//Test
+using DataStorage;
+
+using MessageBox = System.Windows.MessageBox;
+
 namespace InterfaceWPF
 {
     /// <summary>
@@ -35,6 +40,11 @@ namespace InterfaceWPF
 
         private void CreateTreeView(object sender, RoutedEventArgs e)
         {
+            RemplirArborescence();
+        }
+
+        private void RemplirArborescence()
+        {
             TreeViewItem item;
 
             item = new TreeViewItem();
@@ -44,7 +54,6 @@ namespace InterfaceWPF
             RemplirGroupe(_database.Root, item);
 
             Arborescence.Items.Add(item);
-            
         }
 
         private void RemplirGroupe(Groupe inGroupe, TreeViewItem inItem)
@@ -103,11 +112,12 @@ namespace InterfaceWPF
                         newItem.Header = title;
 
                         newEntry = new Entry();
+                        newEntry.Title = title;
                         if(groupePere != null)
                             groupePere.Entries.Add(newEntry);
 
                         newKey = new AffichageClé();
-                        newKey.DataContext = newKey;
+                        newKey.DataContext = newEntry;
 
                         newItem.Items.Add(newKey);
 
@@ -142,6 +152,43 @@ namespace InterfaceWPF
             }
 
             return res;
+        }
+
+        private void onEnregistrerClicked(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog ofd = new SaveFileDialog();
+
+            DialogResult res = ofd.ShowDialog();
+
+            if (res.ToString() == "OK")
+            {
+                string filename = ofd.FileName;
+
+                IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
+                ids.Save(filename, _database);
+            }
+            else
+                MessageBox.Show("Problème d'enregistrement du fichier !");
+        }
+
+        private void onOuvrirClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            DialogResult res = ofd.ShowDialog();
+
+            if (res.ToString() == "OK")
+            {
+                string filename = ofd.FileName;
+
+                IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
+                _database = ids.Load(filename);
+
+                Arborescence.Items.Clear();
+                RemplirArborescence();
+            }
+            else
+                MessageBox.Show("Problème d'ouverture du fichier !");
         }
     }
 }

@@ -3,30 +3,39 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:InterfaceWPF"
         WindowStartupLocation="CenterScreen"
-        Title="Gestionnaire de mots de passe" Height="350" Width="450">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="330"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <TreeView
-            Name="Arborescence"
-            Height="300"
-            Width="300"
-	        Margin="10,10,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Loaded="CreateTreeView"
-            Grid.Column="0"
-            />
+        Title="Gestionnaire de mots de passe"
+        Height="360" Width="450" MinHeight="380" MinWidth="450">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Fichier">
+                <MenuItem Header="Ouvrir" Click="onOuvrirClicked"/>
+                <MenuItem Header="Enregistrer" Click="onEnregistrerClicked"/>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="330"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <TreeView
+                Name="Arborescence"
+                Height="300"
+                Width="300"
+	            Margin="10,10,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Loaded="CreateTreeView"
+                Grid.Column="0"
+                />
         
-        <StackPanel Grid.Column="1">
-            <Button 
-            Name="AjouterButton"
-            Content="Ajouter une clé"
-            Margin="10,10,10,10"
-            Click="onAjouterButtonClicked"/>
-        </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Button 
+                Name="AjouterButton"
+                Content="Ajouter une clé"
+                Margin="10,10,10,10"
+                Click="onAjouterButtonClicked"/>
+            </StackPanel>
         
-    </Grid>
+        </Grid>
+    </DockPanel>
 </Window>
