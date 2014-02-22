@@ -53,6 +53,7 @@ namespace Datas
         {
             username = inUsername;
             url = inUrl;
+            GeneratePassword(8);
         }
 
         /// <summary>
@@ -63,6 +64,7 @@ namespace Datas
         {
             username = "Unknown";
             url = "no url";
+            GeneratePassword(8);
         }
 
         /// <summary>
