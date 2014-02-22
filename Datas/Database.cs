@@ -28,11 +28,6 @@ namespace Datas
             root = inRoot;
         }
 
-        public Database()
-        {
-            root = new Groupe();
-        }
-
         /// <summary>
         /// Conversion en string
         /// </summary>

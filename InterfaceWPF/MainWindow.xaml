@@ -4,7 +4,7 @@
         xmlns:controls="clr-namespace:InterfaceWPF"
         WindowStartupLocation="CenterScreen"
         Title="Gestionnaire de mots de passe"
-        Height="360" Width="450" MinHeight="380" MinWidth="450">
+        Height="360" Width="450" MinHeight="380" MinWidth="470">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Fichier">
@@ -34,6 +34,11 @@
                 Content="Ajouter une clé"
                 Margin="10,10,10,10"
                 Click="onAjouterButtonClicked"/>
+                <Button 
+                Name="SupprimerButton"
+                Content="Supprimer une clé"
+                Margin="10,10,10,10"
+                Click="onSupprimerButtonClicked"/>
             </StackPanel>
         
         </Grid>

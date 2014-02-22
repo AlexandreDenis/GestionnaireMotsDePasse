@@ -30,25 +30,36 @@ namespace InterfaceWPF
     {
         private Database _database;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public MainWindow()
         {
-            _database = new Database(new Groupe());
+            _database = new Database(new Groupe("Root", null, new List<Entry>(), new List<Groupe>()));
             _database.Root.AddGroup(new Groupe("Réseau", null, new List<Entry>(), new List<Groupe>()));
             _database.Root.Groups[0].AddEntry(new Entry("LocalUser", null, "localuser", "http://google.fr"));
             InitializeComponent();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CreateTreeView(object sender, RoutedEventArgs e)
         {
             RemplirArborescence();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void RemplirArborescence()
         {
             TreeViewItem item;
 
             item = new TreeViewItem();
-            item.Header = "Root";
+            item.Header = _database.Root.Title;
             item.IsExpanded = true;
 
             RemplirGroupe(_database.Root, item);
@@ -56,6 +67,11 @@ namespace InterfaceWPF
             Arborescence.Items.Add(item);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inGroupe"></param>
+        /// <param name="inItem"></param>
         private void RemplirGroupe(Groupe inGroupe, TreeViewItem inItem)
         {
             TreeViewItem item;
@@ -86,6 +102,11 @@ namespace InterfaceWPF
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onAjouterButtonClicked(object sender, RoutedEventArgs e)
         {
             TreeViewItem father;
@@ -102,29 +123,30 @@ namespace InterfaceWPF
                 else
                     father = (TreeViewItem)Arborescence.Items[0];
 
-                if(father.Items.Count != 0)
-                    if (!(father.Items[0] is AffichageClé))
+                if(!isClé(father))
+                {
+                    //Recherche de l'élément de la Database correspondant à l'élément père
+                    Groupe groupePere = RechercherGroupe(_database.Root, (string)father.Header);
+
+                    newItem = new TreeViewItem();
+                    newItem.Header = title;
+
+                    newEntry = new Entry();
+                    newEntry.Title = title;
+                    if (groupePere != null)
                     {
-                        //Recherche de l'élément de la Database correspondant à l'élément père
-                        Groupe groupePere = RechercherGroupe(_database.Root, (string)father.Header);
-
-                        newItem = new TreeViewItem();
-                        newItem.Header = title;
-
-                        newEntry = new Entry();
-                        newEntry.Title = title;
-                        if(groupePere != null)
-                            groupePere.Entries.Add(newEntry);
-
-                        newKey = new AffichageClé();
-                        newKey.DataContext = newEntry;
-
-                        newItem.Items.Add(newKey);
-
-                        father.Items.Add(newItem);
+                        groupePere.Entries.Add(newEntry);
                     }
-                    else
-                        MessageBox.Show("Vous ne pouvez ajouter des clés qu'à des dossiers.");
+
+                    newKey = new AffichageClé();
+                    newKey.DataContext = newEntry;
+
+                    newItem.Items.Add(newKey);
+
+                    father.Items.Add(newItem);
+                }
+                else
+                    MessageBox.Show("Vous ne pouvez ajouter des clés qu'à des dossiers.");
             }
             catch (InvalidCastException)
             {
@@ -132,6 +154,58 @@ namespace InterfaceWPF
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onSupprimerButtonClicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                TreeViewItem item = (TreeViewItem)Arborescence.SelectedItem;
+
+                if (Arborescence.SelectedItem != null)
+                {
+                    if (isClé(item))
+                    {
+                        Arborescence.Items.Remove(Arborescence.SelectedItem);
+                    }
+                    else
+                        MessageBox.Show("Veuillez sélectionner une clé.");
+                }
+                else
+                    MessageBox.Show("Veuillez sélectionner la clé à supprimer");
+            }
+            catch (InvalidCastException)
+            {
+                MessageBox.Show("Veuillez sélectionner une clé.");
+            }
+           
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inItem"></param>
+        /// <returns></returns>
+        private bool isClé(TreeViewItem inItem)
+        {
+            bool res = false;
+
+            if (inItem.Items.Count != 0)
+                if (inItem.Items[0] is AffichageClé)
+                    res = true;
+
+            return res;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inGroupe"></param>
+        /// <param name="inTitle"></param>
+        /// <returns></returns>
         private Groupe RechercherGroupe(Groupe inGroupe, string inTitle)
         {
             Groupe res = null;
@@ -154,6 +228,11 @@ namespace InterfaceWPF
             return res;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onEnregistrerClicked(object sender, RoutedEventArgs e)
         {
             SaveFileDialog ofd = new SaveFileDialog();
@@ -171,6 +250,11 @@ namespace InterfaceWPF
                 MessageBox.Show("Problème d'enregistrement du fichier !");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onOuvrirClicked(object sender, System.Windows.RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
