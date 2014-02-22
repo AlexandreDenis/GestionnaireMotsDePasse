@@ -20,6 +20,7 @@ using Datas;
 using DataStorage;
 
 using MessageBox = System.Windows.MessageBox;
+using TextBlock = System.Windows.Controls.TextBlock;
 
 namespace InterfaceWPF
 {
@@ -68,6 +69,16 @@ namespace InterfaceWPF
             stackPanel.Children.Add(textBlock);
 
             return stackPanel;
+        }
+
+        private void onDoubleClickOnNode(object sender, MouseButtonEventArgs e)
+        {
+            StackPanel stackPanel = (StackPanel)((TreeViewItem)sender).Header;
+            TextBlock textBlock = (TextBlock)stackPanel.Children[1];
+
+            string title = Interaction.InputBox("Entrez le nouveau nom :", "Nom du noeud");
+
+            textBlock.Text = title;
         }
 
         /// <summary>
@@ -145,8 +156,6 @@ namespace InterfaceWPF
             AffichageClé newKey;
             Entry newEntry;
 
-            string title = Interaction.InputBox("Entrez le nom de la nouvelle clé :", "Nom de la clé");
-
             try
             {
                 if (Arborescence.SelectedItem != null)
@@ -156,6 +165,8 @@ namespace InterfaceWPF
 
                 if(!isClé(father))
                 {
+                    string title = Interaction.InputBox("Entrez le nom de la nouvelle clé :", "Nom de la clé");
+
                     //Recherche de l'élément de la Database correspondant à l'élément père
                     Groupe groupePere = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)father.Header).Children[1]).Text);
 
@@ -200,11 +211,11 @@ namespace InterfaceWPF
                 {
                     if (isClé(item))
                     {
-                        Groupe father = RechercherGroupe(_database.Root, (string)((item.Parent as TreeViewItem).Header));
+                        Groupe father = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)((TreeViewItem)item.Parent).Header).Children[1]).Text);
 
                         if (father != null)
                         {
-                            Entry entryToDelete = RechercherEntry(father, (string)item.Header);
+                            Entry entryToDelete = RechercherEntry(father, (string)((TextBlock)((StackPanel)((TreeViewItem)item).Header).Children[1]).Text);
 
                             father.Entries.Remove(entryToDelete);
 
@@ -393,8 +404,6 @@ namespace InterfaceWPF
             TreeViewItem newItem;
             Groupe newGroupe;
 
-            string title = Interaction.InputBox("Entrez le nom du nouveau dossier :", "Nom du nouveau dossier");
-
             try
             {
                 if (Arborescence.SelectedItem != null)
@@ -404,6 +413,8 @@ namespace InterfaceWPF
 
                 if(!isClé(father))
                 {
+                    string title = Interaction.InputBox("Entrez le nom de la nouvelle clé :", "Nom de la clé");
+
                     //Recherche de l'élément de la Database correspondant à l'élément père
                     Groupe groupePere = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)father.Header).Children[1]).Text);
 
@@ -438,11 +449,11 @@ namespace InterfaceWPF
                 {
                     if (!isClé(item))
                     {
-                        Groupe father = RechercherGroupe(_database.Root, (string)((item.Parent as TreeViewItem).Header));
+                        Groupe father = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)((TreeViewItem)item.Parent).Header).Children[1]).Text);
 
                         if (father != null)
                         {
-                            Groupe groupToDelete = RechercherGroupe(father, (string)item.Header);
+                            Groupe groupToDelete = RechercherGroupe(father, (string)((TextBlock)((StackPanel)((TreeViewItem)item).Header).Children[1]).Text);
 
                             father.Groups.Remove(groupToDelete);
 
