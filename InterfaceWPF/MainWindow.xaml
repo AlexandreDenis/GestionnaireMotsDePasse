@@ -4,12 +4,14 @@
         xmlns:controls="clr-namespace:InterfaceWPF"
         WindowStartupLocation="CenterScreen"
         Title="Gestionnaire de mots de passe"
-        Height="360" Width="450" MinHeight="380" MinWidth="470">
+        Height="360" Width="450" MinHeight="380" MinWidth="470"
+        Closing="onClosing">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Fichier">
                 <MenuItem Header="Ouvrir" Click="onOuvrirClicked"/>
                 <MenuItem Header="Enregistrer" Click="onEnregistrerClicked"/>
+                <MenuItem Header="Quitter" Click="onQuitterClicked"/>
             </MenuItem>
         </Menu>
         <Grid>

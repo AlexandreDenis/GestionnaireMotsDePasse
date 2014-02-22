@@ -261,19 +261,22 @@ namespace InterfaceWPF
         /// <param name="e"></param>
         private void onEnregistrerClicked(object sender, RoutedEventArgs e)
         {
+            Enregistrer();
+        }
+
+        private void Enregistrer()
+        {
             SaveFileDialog ofd = new SaveFileDialog();
 
             DialogResult res = ofd.ShowDialog();
 
-            if (res.ToString() == "OK")
+            do
             {
                 string filename = ofd.FileName;
 
                 IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
                 ids.Save(filename, _database);
-            }
-            else
-                MessageBox.Show("Problème d'enregistrement du fichier !");
+            } while (res.ToString() != "OK");
         }
 
         /// <summary>
@@ -299,6 +302,45 @@ namespace InterfaceWPF
             }
             else
                 MessageBox.Show("Problème d'ouverture du fichier !");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onQuitterClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            GererFermetureProgramme(new System.ComponentModel.CancelEventArgs());
+        }
+
+        private void GererFermetureProgramme(System.ComponentModel.CancelEventArgs e)
+        {
+            string messageBoxText = "Souhaitez-vous sauvegarder vos modifications avant de quitter le programme?";
+            string caption = "Fermeture du programme";
+            MessageBoxButton button = MessageBoxButton.YesNoCancel;
+            MessageBoxImage icon = MessageBoxImage.Warning;
+
+            MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    Enregistrer();
+                    System.Environment.Exit(0);
+                    break;
+                case MessageBoxResult.No:
+                    System.Environment.Exit(0);
+                    break;
+                case MessageBoxResult.Cancel:
+                    e.Cancel = true;
+                    break;
+            }
+        }
+
+        private void onClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            GererFermetureProgramme(e);
         }
     }
 }
