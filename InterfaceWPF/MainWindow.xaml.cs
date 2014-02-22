@@ -169,7 +169,17 @@ namespace InterfaceWPF
                 {
                     if (isClé(item))
                     {
-                        Arborescence.Items.Remove(Arborescence.SelectedItem);
+                        Groupe father = RechercherGroupe(_database.Root, (string)((item.Parent as TreeViewItem).Header));
+
+                        if (father != null)
+                        {
+                            Entry entryToDelete = RechercherEntry(father, (string)item.Header);
+
+                            father.Entries.Remove(entryToDelete);
+
+                            if (item.Parent is TreeViewItem)
+                                (item.Parent as TreeViewItem).Items.Remove(item);
+                        }
                     }
                     else
                         MessageBox.Show("Veuillez sélectionner une clé.");
@@ -226,6 +236,22 @@ namespace InterfaceWPF
             }
 
             return res;
+        }
+
+        private Entry RechercherEntry(Groupe inGroupe, string inTitle)
+        {
+            Entry entry = null;
+
+            foreach (Entry en in inGroupe.Entries)
+            {
+                if (en.Title == inTitle)
+                {
+                    entry = en;
+                    break;
+                }
+            }
+
+            return entry;
         }
 
         /// <summary>
