@@ -56,6 +56,11 @@
                 Content="Renommer"
                 Margin="10,10,10,10"
                 Click="onRenommerClicked"/>
+                <Button 
+                Name="AllerURLButton"
+                Content="Aller à l'URL..."
+                Margin="10,10,10,10"
+                Click="onAllerURLClicked"/>
                 <DockPanel>
                     <Label Content="Nb carac. pour le mdp :" DockPanel.Dock="Left"/>
                     <TextBox Name="inputNbCarac" Width="20" HorizontalAlignment="Left" DockPanel.Dock="Right" LostFocus="onNbCaracChanged"/>

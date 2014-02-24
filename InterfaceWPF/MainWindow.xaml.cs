@@ -502,6 +502,39 @@ namespace InterfaceWPF
             }
         }
 
+        private void onAllerURLClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            try
+            {
+                TreeViewItem item = (TreeViewItem)Arborescence.SelectedItem;
+
+                if (Arborescence.SelectedItem != null)
+                {
+                    if (isClé(item))
+                    {
+                        AffichageClé affKey = (AffichageClé)item.Items[0];
+
+                        try
+                        {
+                            System.Diagnostics.Process.Start(affKey.inputUrl.Text);
+                        }
+                        catch (Exception)
+                        {
+                            MessageBox.Show("URL inconnue.");
+                        }
+                    }
+                    else
+                        MessageBox.Show("Veuillez sélectionner une clé.");
+                }
+                else
+                    MessageBox.Show("Veuillez sélectionner une clé.");
+            }
+            catch (InvalidCastException)
+            {
+                MessageBox.Show("Veuillez sélectionner une clé.");
+            }
+        }
+
         private void onKeyDownHandler(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (Arborescence.SelectedItem != null)
