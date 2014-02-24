@@ -5,7 +5,7 @@
         WindowStartupLocation="CenterScreen"
         Title="Gestionnaire de mots de passe"
         Height="360" Width="450" MinHeight="380" MinWidth="510"
-        Closing="onClosing">
+        Closing="onClosing" KeyDown="onKeyDownHandler">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="Fichier">

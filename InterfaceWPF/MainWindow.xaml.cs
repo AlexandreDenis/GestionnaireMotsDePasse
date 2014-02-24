@@ -20,6 +20,7 @@ using DataStorage;
 
 using MessageBox = System.Windows.MessageBox;
 using TextBlock = System.Windows.Controls.TextBlock;
+using Clipboard = System.Windows.Clipboard;
 
 namespace InterfaceWPF
 {
@@ -478,12 +479,14 @@ namespace InterfaceWPF
                     if (!isClé(item))
                     {
                         Groupe groupe = RechercherGroupe(_database.Root, textBlock.Text);
-                        groupe.Title = title;
+                        if(groupe != null)
+                            groupe.Title = title;
                     }
                     else
                     {
                         Entry entry = RechercherEntry(_database.Root, textBlock.Text);
-                        entry.Title = title;
+                        if(entry != null)
+                            entry.Title = title;
                     }
 
                     textBlock.Text = title;
@@ -497,6 +500,64 @@ namespace InterfaceWPF
             {
                 MessageBox.Show("Veuillez sélectionner l'élément à renommer.");
             }
+        }
+
+        private void onKeyDownHandler(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (Arborescence.SelectedItem != null)
+            {
+                if(Keyboard.Modifiers == ModifierKeys.Control)
+                {
+                    //Copie de l'identifiant
+                    if (e.Key == Key.B)
+                    {
+                        CopierClé(true);
+                    }
+
+                    //Copie du mot de passe
+                    if (e.Key == Key.C)
+                    {
+                        CopierClé(false);
+                    }
+                }
+            }
+        }
+
+         private void CopierClé(bool id)
+         {
+             try
+             {
+                 TreeViewItem item = (TreeViewItem)Arborescence.SelectedItem;
+
+                 if (isClé(item))
+                 {
+                     AffichageClé affKey = (AffichageClé)item.Items[0];
+
+                     if (item != null)
+                     {
+                         string aCopier;
+
+                         if (id)
+                         {
+                             aCopier = affKey.inputId.Text;
+                         }
+                         else
+                         {
+                             aCopier = affKey.inputMdp.Text;
+                         }
+
+                         Clipboard.SetData(System.Windows.DataFormats.Text, aCopier);
+                     }
+                 }
+                 else
+                 {
+                     MessageBox.Show("Veuillez sélectionner une clé.");
+                 }
+             }
+             catch (InvalidCastException)
+             {
+                 MessageBox.Show("Veuillez sélectionner une clé.");
+             }
         }
     }
 }
