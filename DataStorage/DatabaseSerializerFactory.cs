@@ -8,13 +8,20 @@ namespace DataStorage
 {
     public class DatabaseSerializerFactory
     {
+        private static IDatabaseSerializer _serializer;
+        public static IDatabaseSerializer Serializer
+        {
+            get { return _serializer; }
+            set { _serializer = value; }
+        }
+
         /// <summary>
         /// Créé un serializer de base de données
         /// </summary>
         /// <returns></returns>
         public static IDatabaseSerializer Create()
         {
-            return new MyXmlSerializer();
+            return Serializer;
         }
     }
 }

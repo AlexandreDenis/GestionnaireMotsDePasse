@@ -14,7 +14,7 @@ using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DataStorage
 {
-    class MyXmlSerializer : IDatabaseSerializer
+    public class MyXmlSerializer : IDatabaseSerializer
     {
         /// <summary>
         /// Constructeur
@@ -62,16 +62,16 @@ namespace DataStorage
         {
             //création du fichier de sauvegarde
             FileStream fs = new FileStream(filename, FileMode.Create);
-            //try
+            try
             {
                 System.Xml.Serialization.XmlSerializer formatter = new XmlSerializer(typeof(Database), "Datas");
                 formatter.Serialize(fs, data);
             }
-            /*catch (Exception e)
+            catch (Exception e)
             {
-                MessageBox.Show("Echec de la sauvegarde : " + e.StackTrace);
-            }*/
-           // finally
+                MessageBox.Show("Echec de la sauvegarde : " + e.Message);
+            }
+            finally
             {
                 fs.Close();
                 fs.Dispose();

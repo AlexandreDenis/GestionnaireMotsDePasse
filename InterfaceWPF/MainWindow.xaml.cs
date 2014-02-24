@@ -45,6 +45,22 @@ namespace InterfaceWPF
             InitializeComponent();
 
             inputNbCarac.Text = Entry.LenghtPassword.ToString();
+
+            //Gestion de la configuration
+            CustomConfigurationSection customConfig = CustomConfigurationSection.GetSection();
+            string typePersistance = customConfig.typePersistance;
+
+            switch (typePersistance)
+            {
+                case "xml":
+                    DatabaseSerializerFactory.Serializer = new MyXmlSerializer();
+                    break;
+
+                case "bin":
+                default:
+                    DatabaseSerializerFactory.Serializer = new BinarySerializer();
+                    break;
+            }
         }
 
         private StackPanel createHeader(string inText, bool isFolder)
