@@ -14,7 +14,7 @@ namespace DataStorage
         /// <returns></returns>
         public static IDatabaseSerializer Create()
         {
-            return new BinarySerializer();
+            return new MyXmlSerializer();
         }
     }
 }

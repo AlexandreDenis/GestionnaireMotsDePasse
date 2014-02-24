@@ -13,7 +13,7 @@ namespace Datas
         /// Liste d'entrées du groupe
         /// </summary>
         private List<Entry> entries;
-        public IList<Entry> Entries
+        public List<Entry> Entries
         {
             get { return entries; }
             set { entries = (List<Entry>)value; }
@@ -23,7 +23,7 @@ namespace Datas
         /// Liste de groupes du groupe
         /// </summary>
         private List<Groupe> groups;
-        public IList<Groupe> Groups
+        public List<Groupe> Groups
         {
             get { return groups; }
             set { groups = (List<Groupe>)value; }
