@@ -34,7 +34,7 @@ namespace InterfaceWPF
         /// <summary>
         /// 
         /// </summary>
-        public MainWindow()
+        public MainWindow(string inLogin)
         {
             _database = new Database(new Groupe("Root", null, new List<Entry>(), new List<Groupe>()));
             _database.Root.AddGroup(new Groupe("Applications", null, new List<Entry>(), new List<Groupe>()));
@@ -43,6 +43,8 @@ namespace InterfaceWPF
             _database.Root.Groups[0].AddEntry(new Entry("LocalUser", null, "localuser", "http://google.fr"));
 
             InitializeComponent();
+
+            this.Title += " : " + inLogin;
 
             inputNbCarac.Text = Entry.LenghtPassword.ToString();
 
@@ -358,7 +360,7 @@ namespace InterfaceWPF
         /// <param name="e"></param>
         private void onQuitterClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            GererFermetureProgramme(new System.ComponentModel.CancelEventArgs());
+            this.Close();
         }
 
         private void GererFermetureProgramme(System.ComponentModel.CancelEventArgs e)
@@ -367,6 +369,7 @@ namespace InterfaceWPF
             string caption = "Fermeture du programme";
             MessageBoxButton button = MessageBoxButton.YesNoCancel;
             MessageBoxImage icon = MessageBoxImage.Warning;
+            Connexion connexion;
 
             MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button, icon);
 
@@ -374,10 +377,12 @@ namespace InterfaceWPF
             {
                 case MessageBoxResult.Yes:
                     Enregistrer();
-                    System.Environment.Exit(0);
+                    connexion = new Connexion();
+                    connexion.Show();
                     break;
                 case MessageBoxResult.No:
-                    System.Environment.Exit(0);
+                    connexion = new Connexion();
+                    connexion.Show();
                     break;
                 case MessageBoxResult.Cancel:
                     e.Cancel = true;

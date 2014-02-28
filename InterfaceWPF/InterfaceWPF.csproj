@@ -60,6 +60,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Connexion.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -70,6 +74,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Connexion.xaml.cs">
+      <DependentUpon>Connexion.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomConfigurationSection.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -116,6 +123,10 @@
     <ProjectReference Include="..\GenerationMotDePasse\GenerationMotDePasse.csproj">
       <Project>{132884c1-8049-46cb-8443-611e5b643a6f}</Project>
       <Name>GenerationMotDePasse</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Users\Users.csproj">
+      <Project>{3051c05a-9290-40e8-887c-3e17c9019909}</Project>
+      <Name>Users</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

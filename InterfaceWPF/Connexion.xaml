@@ -1,0 +1,27 @@
+﻿<Window x:Class="InterfaceWPF.Connexion"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Connexion" Height="250" Width="250"
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize" KeyDown="onKeyDownHandler"
+        Closing="onClosing">
+    <Grid Background="Azure" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center">Connexion</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">Login :</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">Password :</TextBlock>
+        <Button    Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Name="InscriptionWPF" Click="onClickInscriptionButton" Margin="0,15,27,15">S'inscrire</Button>
+        <Button    Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Name="connexionWPF" Click="onClickConnexionButton">Se connecter</Button>
+        <TextBox   Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Name="loginWPF"></TextBox>
+        <PasswordBox   Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Width="100" Name="mdpWPF"></PasswordBox>
+    </Grid>
+</Window>
