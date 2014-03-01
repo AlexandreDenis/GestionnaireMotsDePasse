@@ -55,8 +55,8 @@ namespace Datas
         /// <param name="inExpiration"></param>
         /// <param name="inUsername"></param>
         /// <param name="inUrl"></param>
-        public Entry(string inTitle, Nullable<DateTime> inExpiration, string inUsername, string inUrl)
-            : base(inTitle, inExpiration)
+        public Entry(string inTitle, Nullable<DateTime> inExpiration, DateTime inDateCreation, DateTime inDateModification, string inUsername, string inUrl)
+            : base(inTitle, inExpiration,inDateCreation,inDateModification)
         {
             username = inUsername;
             url = inUrl;

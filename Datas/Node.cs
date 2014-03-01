@@ -29,6 +29,21 @@ namespace Datas
             set { title = value; }
         }
 
+        private DateTime dateCreation;
+        public DateTime DateCreation
+        {
+            get { return dateCreation; }
+            set { dateCreation = value; }
+        }
+
+        private DateTime dateModification;
+        public DateTime DateModification
+        {
+            get { return dateModification; }
+            set { dateModification = value; }
+        }
+
+
         /// <summary>
         /// Constructeur par défaut
         /// </summary>
@@ -36,6 +51,8 @@ namespace Datas
         {
             title = "";
             expiration = null;
+            dateCreation = System.DateTime.Now;
+            dateModification = System.DateTime.Now;
         }
 
         /// <summary>
@@ -43,10 +60,17 @@ namespace Datas
         /// </summary>
         /// <param name="inTitle"></param>
         /// <param name="inExpiration"></param>
-        public Node(string inTitle, Nullable<DateTime> inExpiration)
+        public Node(string inTitle, Nullable<DateTime> inExpiration, DateTime inDateCreation, DateTime inDateModification)
         {
             title = inTitle;
             expiration = inExpiration;
+            dateCreation = inDateCreation;
+            dateModification = inDateModification;
+        }
+
+        public void UpdateDateModification()
+        {
+            dateModification = System.DateTime.Now;
         }
     }
 }

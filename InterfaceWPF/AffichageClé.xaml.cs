@@ -15,11 +15,21 @@ using System.Windows.Shapes;
 
 namespace InterfaceWPF
 {
+    public delegate void ChangedEventHandler(object sender, EventArgs e);
+
     /// <summary>
     /// Logique d'interaction pour AffichageClé.xaml
     /// </summary>
     public partial class AffichageClé : UserControl
     {
+        public event ChangedEventHandler Changed;
+
+        protected void OnChanged(object sender, RoutedEventArgs e)
+        {
+            if (Changed != null)
+                Changed(this, e);
+        }
+
         public AffichageClé()
         {
             InitializeComponent();

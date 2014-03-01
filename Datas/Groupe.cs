@@ -36,8 +36,8 @@ namespace Datas
         /// <param name="inExpiration"></param>
         /// <param name="inEntries"></param>
         /// <param name="inGroups"></param>
-        public Groupe(string inTitle, Nullable<DateTime> inExpiration, IEnumerable<Entry> inEntries, IEnumerable<Groupe> inGroups)
-            :base(inTitle,inExpiration)
+        public Groupe(string inTitle, Nullable<DateTime> inExpiration, DateTime inDateCreation, DateTime inDateModification, IEnumerable<Entry> inEntries, IEnumerable<Groupe> inGroups)
+            :base(inTitle,inExpiration,inDateCreation,inDateModification)
         {
             entries = (List<Entry>)inEntries;
             groups = (List<Groupe>)inGroups;

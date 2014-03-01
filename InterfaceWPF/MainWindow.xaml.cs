@@ -60,10 +60,10 @@ namespace InterfaceWPF
 
             if (newUser || !File.Exists(_gestionUtilisateurs.UtilisateurCourant.Login))
             {
-                _database = new Database(new Groupe(_gestionUtilisateurs.UtilisateurCourant.Login, null, new List<Entry>(), new List<Groupe>()));
-                _database.Root.AddGroup(new Groupe("Applications", null, new List<Entry>(), new List<Groupe>()));
-                _database.Root.AddGroup(new Groupe("Internet", null, new List<Entry>(), new List<Groupe>()));
-                _database.Root.AddGroup(new Groupe("Machines", null, new List<Entry>(), new List<Groupe>()));
+                _database = new Database(new Groupe(_gestionUtilisateurs.UtilisateurCourant.Login, null, System.DateTime.Now, System.DateTime.Now, new List<Entry>(), new List<Groupe>()));
+                _database.Root.AddGroup(new Groupe("Applications", null, System.DateTime.Now, System.DateTime.Now, new List<Entry>(), new List<Groupe>()));
+                _database.Root.AddGroup(new Groupe("Internet", null, System.DateTime.Now, System.DateTime.Now, new List<Entry>(), new List<Groupe>()));
+                _database.Root.AddGroup(new Groupe("Machines", null, System.DateTime.Now, System.DateTime.Now, new List<Entry>(), new List<Groupe>()));
             }
             else
             {
@@ -131,6 +131,40 @@ namespace InterfaceWPF
             Arborescence.Items.Add(item);
         }
 
+        private void onSelectedItem(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            string str = "";
+
+            try
+            {
+                TreeViewItem item = (TreeViewItem)Arborescence.SelectedItem;
+                StackPanel stackPanel = (StackPanel)item.Header;
+                TextBlock textBlock = (TextBlock)stackPanel.Children[1];
+
+                if (item != null)
+                {
+                    if (isClé(item))
+                    {
+                        Entry entry = RechercherEntry(_database.Root, (string)textBlock.Text);
+
+                        str = "Création : " + entry.DateCreation + " | Dernière modification : " + entry.DateModification;
+                    }
+                    else
+                    {
+                        Groupe groupe = RechercherGroupe(_database.Root, (string)textBlock.Text);
+
+                        str = "Création : " + groupe.DateCreation + " | Dernière modification : " + groupe.DateModification;
+                    }
+                }
+            }
+            catch (InvalidCastException)
+            {
+
+            }
+
+            statusDates.Text = str;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -163,6 +197,8 @@ namespace InterfaceWPF
                 item.Items.Add(affKey);
 
                 inItem.Items.Add(item);
+
+                affKey.Changed += onInputTextChanged;
             }
         }
 
@@ -204,6 +240,7 @@ namespace InterfaceWPF
 
                     newKey = new AffichageClé();
                     newKey.DataContext = newEntry;
+                    newKey.Changed += onInputTextChanged;
 
                     newItem.Items.Add(newKey);
 
@@ -216,6 +253,16 @@ namespace InterfaceWPF
             {
                 MessageBox.Show("Vous ne pouvez ajouter des clés qu'à des dossiers.");
             }
+        }
+
+        void onInputTextChanged(object sender, EventArgs e)
+        {
+            AffichageClé affKey = (AffichageClé)sender;
+
+            Entry entry = (Entry)affKey.DataContext;
+
+            if (entry != null)
+                entry.UpdateDateModification();
         }
 
         /// <summary>
@@ -311,6 +358,17 @@ namespace InterfaceWPF
                 {
                     entry = en;
                     break;
+                }
+            }
+
+            if (entry == null)
+            {
+                foreach (Groupe groupe in inGroupe.Groups)
+                {
+                    entry = RechercherEntry(groupe, inTitle);
+
+                    if (entry != null)
+                        break;
                 }
             }
 
@@ -542,14 +600,20 @@ namespace InterfaceWPF
                     if (!isClé(item))
                     {
                         Groupe groupe = RechercherGroupe(_database.Root, textBlock.Text);
-                        if(groupe != null)
+                        if (groupe != null)
+                        {
                             groupe.Title = title;
+                            groupe.UpdateDateModification();
+                        }
                     }
                     else
                     {
                         Entry entry = RechercherEntry(_database.Root, textBlock.Text);
-                        if(entry != null)
+                        if (entry != null)
+                        {
                             entry.Title = title;
+                            entry.UpdateDateModification();
+                        }
                     }
 
                     textBlock.Text = title;
