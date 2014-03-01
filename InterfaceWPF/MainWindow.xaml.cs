@@ -24,6 +24,7 @@ using TextBlock = System.Windows.Controls.TextBlock;
 using Clipboard = System.Windows.Clipboard;
 using System.Security.Cryptography;
 using System.IO;
+using System.Threading;
 
 namespace InterfaceWPF
 {
@@ -147,13 +148,15 @@ namespace InterfaceWPF
                     {
                         Entry entry = RechercherEntry(_database.Root, (string)textBlock.Text);
 
-                        str = "Création : " + entry.DateCreation + " | Dernière modification : " + entry.DateModification;
+                        if(entry != null)
+                            str = "Création : " + entry.DateCreation + " | Dernière modification : " + entry.DateModification;
                     }
                     else
                     {
                         Groupe groupe = RechercherGroupe(_database.Root, (string)textBlock.Text);
 
-                        str = "Création : " + groupe.DateCreation + " | Dernière modification : " + groupe.DateModification;
+                        if(groupe != null)
+                            str = "Création : " + groupe.DateCreation + " | Dernière modification : " + groupe.DateModification;
                     }
                 }
             }
@@ -387,8 +390,8 @@ namespace InterfaceWPF
 
                 if (filename != "")
                 {
-                    IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
-                    ids.Save(filename, _database, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+                    Thread newThread = new Thread(() => EnregistrerThread(filename));
+                    newThread.Start();
                 }
                 else
                 {
@@ -396,6 +399,12 @@ namespace InterfaceWPF
                     break;
                 }
             } while (res.ToString() != "OK");
+        }
+
+        private void EnregistrerThread(string filename)
+        {
+            IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
+            ids.Save(filename, _database, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
         }
 
         private void EnregistrerCompte()
@@ -423,26 +432,26 @@ namespace InterfaceWPF
             if (res.ToString() == "OK")
             {
                 string filename = ofd.FileName;
-            
-            IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
 
-            try
-            {
-                _database = ids.Load(filename, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+                IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
 
-                Arborescence.Items.Clear();
-                RemplirArborescence();
-            }
-            catch (CryptographicException)
-            {
-                MessageBox.Show("Vous n'êtes pas autorisé à lire ce fichier.");
-            }
+                try
+                {
+                    _database = ids.Load(filename, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+
+                    Arborescence.Items.Clear();
+                    RemplirArborescence();
+                }
+                catch (CryptographicException)
+                {
+                    MessageBox.Show("Vous n'êtes pas autorisé à lire ce fichier.");
+                }
             }
             else
                 MessageBox.Show("Problème d'ouverture du fichier !");
         }
 
-        private void OuvrirCompte()
+       private void OuvrirCompte()
         {
             IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
 
@@ -476,7 +485,8 @@ namespace InterfaceWPF
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    EnregistrerCompte();
+                    Thread newThread = new Thread(EnregistrerCompte);
+                    newThread.Start();
                     connexion = new Connexion();
                     connexion.Show();
                     break;
