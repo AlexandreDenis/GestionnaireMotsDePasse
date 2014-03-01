@@ -17,10 +17,12 @@ using System.Windows.Forms;
 
 using Datas;
 using DataStorage;
+using Users;
 
 using MessageBox = System.Windows.MessageBox;
 using TextBlock = System.Windows.Controls.TextBlock;
 using Clipboard = System.Windows.Clipboard;
+using System.Security.Cryptography;
 
 namespace InterfaceWPF
 {
@@ -30,11 +32,12 @@ namespace InterfaceWPF
     public partial class MainWindow : Window
     {
         private Database _database;
+        private GestionUtilisateurs _gestionUtilisateurs;
 
         /// <summary>
         /// 
         /// </summary>
-        public MainWindow(string inLogin)
+        public MainWindow(GestionUtilisateurs inGestionUtilisateurs)
         {
             _database = new Database(new Groupe("Root", null, new List<Entry>(), new List<Groupe>()));
             _database.Root.AddGroup(new Groupe("Applications", null, new List<Entry>(), new List<Groupe>()));
@@ -42,9 +45,11 @@ namespace InterfaceWPF
             _database.Root.AddGroup(new Groupe("Machines", null, new List<Entry>(), new List<Groupe>()));
             _database.Root.Groups[0].AddEntry(new Entry("LocalUser", null, "localuser", "http://google.fr"));
 
+            _gestionUtilisateurs = inGestionUtilisateurs;
+
             InitializeComponent();
 
-            this.Title += " : " + inLogin;
+            this.Title += " : " + _gestionUtilisateurs.UtilisateurCourant.Login;
 
             inputNbCarac.Text = Entry.LenghtPassword.ToString();
 
@@ -323,8 +328,16 @@ namespace InterfaceWPF
             {
                 string filename = ofd.FileName;
 
-                IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
-                ids.Save(filename, _database);
+                if (filename != "")
+                {
+                    IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
+                    ids.Save(filename, _database, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+                }
+                else
+                {
+                    MessageBox.Show("Problème de sauvegarde du fichier !");
+                    break;
+                }
             } while (res.ToString() != "OK");
         }
 
@@ -344,10 +357,18 @@ namespace InterfaceWPF
                 string filename = ofd.FileName;
 
                 IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
-                _database = ids.Load(filename);
 
-                Arborescence.Items.Clear();
-                RemplirArborescence();
+                try
+                {
+                    _database = ids.Load(filename, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+
+                    Arborescence.Items.Clear();
+                    RemplirArborescence();
+                }
+                catch (CryptographicException)
+                {
+                    MessageBox.Show("Vous n'êtes pas autorisé à lire ce fichier.");
+                }
             }
             else
                 MessageBox.Show("Problème d'ouverture du fichier !");

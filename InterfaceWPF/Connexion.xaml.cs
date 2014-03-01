@@ -80,7 +80,7 @@ namespace InterfaceWPF
 
         private void openMainWindow()
         {
-            MainWindow win = new MainWindow(loginWPF.Text.ToLower());
+            MainWindow win = new MainWindow(_gestionUtilisateurs);
             win.Show();
 
             this.Close();

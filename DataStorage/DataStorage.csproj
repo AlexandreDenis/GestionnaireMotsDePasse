@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms" />
@@ -49,6 +50,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CryptageFichier\CryptageFichier.csproj">
+      <Project>{beaa2c14-ccf4-45b7-81da-ce3d658294c2}</Project>
+      <Name>CryptageFichier</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Datas\Datas.csproj">
       <Project>{92e006a5-fc65-46e0-b43d-66e66b7e6067}</Project>
       <Name>Datas</Name>

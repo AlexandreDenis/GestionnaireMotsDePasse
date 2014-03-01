@@ -8,6 +8,9 @@ using Datas;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
+using System.Windows.Forms;
+using Microsoft.VisualBasic;
 
 namespace DataStorage
 {
@@ -26,25 +29,50 @@ namespace DataStorage
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public Database Load(string filename)
+        public Database Load(string filename, string key)
         {
             Database db = null;
+            string decryptedFilename = filename.Split('.')[0] + "D";
+            FileStream fs = null;
 
-            FileStream fs = new FileStream(filename, FileMode.Open);
             try
             {
-                BinaryFormatter formatter = new BinaryFormatter();
+                CryptageFichier.FileCrypter.DecryptFile(filename, decryptedFilename, key);
 
-                db = (Database)formatter.Deserialize(fs);
+                fs = new FileStream(decryptedFilename, FileMode.Open);
+
+                //try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+
+                    fs.Seek(0, SeekOrigin.Begin);
+                    db = (Database)formatter.Deserialize(fs);
+
+                    fs.Close();
+                    fs.Dispose();
+
+                    File.Delete(decryptedFilename);
+                }
+                /*catch (SerializationException e)
+                {
+                    MessageBox.Show("Echec du chargement : " + e.StackTrace);
+                }
+                finally
+                {
+                    fs.Close();
+                    fs.Dispose();
+                }*/
             }
-            catch (SerializationException e)
+            catch (CryptographicException e)
             {
-                Console.WriteLine("Echec du chargement : " + e.Message);
-            }
-            finally
-            {
-                fs.Close();
-                fs.Dispose();
+                if (fs != null)
+                {
+                    fs.Close();
+                    fs.Dispose();
+                }
+
+                File.Delete(decryptedFilename);
+                throw e;
             }
 
             return db;
@@ -55,25 +83,35 @@ namespace DataStorage
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="data"></param>
-        public void Save(string filename, Database data)
+        public void Save(string filename, Database data, string key)
         {
+            string encryptedFilename = filename.Split('.')[0] + "C";
+
             //création du fichier de sauvegarde
             FileStream fs = new FileStream(filename, FileMode.Create);
-
-            BinaryFormatter formatter = new BinaryFormatter();
             try
             {
+                BinaryFormatter formatter = new BinaryFormatter();
                 formatter.Serialize(fs, data);
             }
-            catch (SerializationException e)
+            catch (Exception e)
             {
-                Console.WriteLine("Echec de la sauvegarde : " + e.Message);
+                MessageBox.Show("Echec de la sauvegarde : " + e.Message);
             }
             finally
             {
                 fs.Close();
                 fs.Dispose();
             }
+
+            fs.Close();
+            fs.Dispose();
+
+            //cryptage du fichier en sortie
+            CryptageFichier.FileCrypter.EncryptFile(filename, encryptedFilename, key);
+
+            File.Delete(filename);
+            FileSystem.Rename(encryptedFilename, filename);
         }
     }
 }

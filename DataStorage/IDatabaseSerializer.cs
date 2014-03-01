@@ -10,7 +10,7 @@ namespace DataStorage
 {
     public interface IDatabaseSerializer
     {
-        Database Load(string filename);
-        void Save(string filename, Database data);
+        Database Load(string filename, string key);
+        void Save(string filename, Database data, string key);
     }
 }

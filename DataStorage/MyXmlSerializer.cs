@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 
 using Datas;
 using System.IO;
 using System.Runtime.Serialization;
 
 using MessageBox = System.Windows.Forms.MessageBox;
+using System.Security.Cryptography;
 
 namespace DataStorage
 {
@@ -29,25 +31,49 @@ namespace DataStorage
         /// </summary>
         /// <param name="filename"></param>
         /// <returns></returns>
-        public Database Load(string filename)
+        public Database Load(string filename, string key)
         {
             Database db = null;
+            string decryptedFilename = filename.Split('.')[0] + "D.xml";
+            FileStream fs = null;
 
-            FileStream fs = new FileStream(filename, FileMode.Open);
             try
             {
-                XmlSerializer formatter = new XmlSerializer(typeof(Database), "Datas");
+                CryptageFichier.FileCrypter.DecryptFile(filename, decryptedFilename, key);
 
-                db = (Database)formatter.Deserialize(fs);
+                fs = new FileStream(decryptedFilename, FileMode.Open);
+
+                try
+                {
+                    XmlSerializer formatter = new XmlSerializer(typeof(Database), "Datas");
+
+                    db = (Database)formatter.Deserialize(fs);
+
+                    fs.Close();
+                    fs.Dispose();
+
+                    File.Delete(decryptedFilename);
+                }
+                catch (SerializationException e)
+                {
+                    Console.WriteLine("Echec du chargement : " + e.Message);
+                }
+                finally
+                {
+                    fs.Close();
+                    fs.Dispose();
+                }
             }
-            catch (SerializationException e)
+            catch (CryptographicException e)
             {
-                Console.WriteLine("Echec du chargement : " + e.Message);
-            }
-            finally
-            {
-                fs.Close();
-                fs.Dispose();
+                if (fs != null)
+                {
+                    fs.Close();
+                    fs.Dispose();
+                }
+
+                File.Delete(decryptedFilename);
+                throw e;
             }
 
             return db;
@@ -58,8 +84,10 @@ namespace DataStorage
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="data"></param>
-        public void Save(string filename, Database data)
+        public void Save(string filename, Database data, string key)
         {
+            string encryptedFilename = filename.Split('.')[0] + "C.xml";
+
             //création du fichier de sauvegarde
             FileStream fs = new FileStream(filename, FileMode.Create);
             try
@@ -76,6 +104,15 @@ namespace DataStorage
                 fs.Close();
                 fs.Dispose();
             }
+
+            fs.Close();
+            fs.Dispose();
+
+            //cryptage du fichier en sortie
+            CryptageFichier.FileCrypter.EncryptFile(filename,encryptedFilename,key);
+
+            File.Delete(filename);
+            FileSystem.Rename(encryptedFilename, filename);
         }
     }
 }
