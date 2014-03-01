@@ -23,6 +23,7 @@ using MessageBox = System.Windows.MessageBox;
 using TextBlock = System.Windows.Controls.TextBlock;
 using Clipboard = System.Windows.Clipboard;
 using System.Security.Cryptography;
+using System.IO;
 
 namespace InterfaceWPF
 {
@@ -37,21 +38,9 @@ namespace InterfaceWPF
         /// <summary>
         /// 
         /// </summary>
-        public MainWindow(GestionUtilisateurs inGestionUtilisateurs)
+        public MainWindow(GestionUtilisateurs inGestionUtilisateurs, bool newUser)
         {
-            _database = new Database(new Groupe("Root", null, new List<Entry>(), new List<Groupe>()));
-            _database.Root.AddGroup(new Groupe("Applications", null, new List<Entry>(), new List<Groupe>()));
-            _database.Root.AddGroup(new Groupe("Internet", null, new List<Entry>(), new List<Groupe>()));
-            _database.Root.AddGroup(new Groupe("Machines", null, new List<Entry>(), new List<Groupe>()));
-            _database.Root.Groups[0].AddEntry(new Entry("LocalUser", null, "localuser", "http://google.fr"));
-
             _gestionUtilisateurs = inGestionUtilisateurs;
-
-            InitializeComponent();
-
-            this.Title += " : " + _gestionUtilisateurs.UtilisateurCourant.Login;
-
-            inputNbCarac.Text = Entry.LenghtPassword.ToString();
 
             //Gestion de la configuration
             CustomConfigurationSection customConfig = CustomConfigurationSection.GetSection();
@@ -68,6 +57,26 @@ namespace InterfaceWPF
                     DatabaseSerializerFactory.Serializer = new BinarySerializer();
                     break;
             }
+
+            if (newUser || !File.Exists(_gestionUtilisateurs.UtilisateurCourant.Login))
+            {
+                _database = new Database(new Groupe(_gestionUtilisateurs.UtilisateurCourant.Login, null, new List<Entry>(), new List<Groupe>()));
+                _database.Root.AddGroup(new Groupe("Applications", null, new List<Entry>(), new List<Groupe>()));
+                _database.Root.AddGroup(new Groupe("Internet", null, new List<Entry>(), new List<Groupe>()));
+                _database.Root.AddGroup(new Groupe("Machines", null, new List<Entry>(), new List<Groupe>()));
+            }
+            else
+            {
+                IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
+
+                _database = ids.Load(_gestionUtilisateurs.UtilisateurCourant.Login, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+            }
+
+            InitializeComponent();
+
+            this.Title += " : " + _gestionUtilisateurs.UtilisateurCourant.Login;
+
+            inputNbCarac.Text = Entry.LenghtPassword.ToString();
         }
 
         private StackPanel createHeader(string inText, bool isFolder)
@@ -308,16 +317,6 @@ namespace InterfaceWPF
             return entry;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEnregistrerClicked(object sender, RoutedEventArgs e)
-        {
-            Enregistrer();
-        }
-
         private void Enregistrer()
         {
             SaveFileDialog ofd = new SaveFileDialog();
@@ -341,6 +340,12 @@ namespace InterfaceWPF
             } while (res.ToString() != "OK");
         }
 
+        private void EnregistrerCompte()
+        {
+            IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
+                    ids.Save(_gestionUtilisateurs.UtilisateurCourant.Login, _database, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -348,31 +353,47 @@ namespace InterfaceWPF
         /// <param name="e"></param>
         private void onOuvrirClicked(object sender, System.Windows.RoutedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
+            Ouvrir();
+        }
+
+        private void Ouvrir()
+        {
+             OpenFileDialog ofd = new OpenFileDialog();
 
             DialogResult res = ofd.ShowDialog();
 
             if (res.ToString() == "OK")
             {
                 string filename = ofd.FileName;
+            
+            IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
 
-                IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
+            try
+            {
+                _database = ids.Load(filename, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
 
-                try
-                {
-                    _database = ids.Load(filename, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
-
-                    Arborescence.Items.Clear();
-                    RemplirArborescence();
-                }
-                catch (CryptographicException)
-                {
-                    MessageBox.Show("Vous n'êtes pas autorisé à lire ce fichier.");
-                }
+                Arborescence.Items.Clear();
+                RemplirArborescence();
+            }
+            catch (CryptographicException)
+            {
+                MessageBox.Show("Vous n'êtes pas autorisé à lire ce fichier.");
+            }
             }
             else
                 MessageBox.Show("Problème d'ouverture du fichier !");
         }
+
+        private void OuvrirCompte()
+        {
+            IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
+
+            _database = ids.Load(_gestionUtilisateurs.UtilisateurCourant.Login, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+
+            Arborescence.Items.Clear();
+            RemplirArborescence();
+        }
+
 
         /// <summary>
         /// 
@@ -397,7 +418,7 @@ namespace InterfaceWPF
             switch (result)
             {
                 case MessageBoxResult.Yes:
-                    Enregistrer();
+                    EnregistrerCompte();
                     connexion = new Connexion();
                     connexion.Show();
                     break;
@@ -634,5 +655,10 @@ namespace InterfaceWPF
                  MessageBox.Show("Veuillez sélectionner une clé.");
              }
         }
+
+         private void onEnregistrerClicked(object sender, RoutedEventArgs e)
+         {
+             Enregistrer();
+         }
     }
 }

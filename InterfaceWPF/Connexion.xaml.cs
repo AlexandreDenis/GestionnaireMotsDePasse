@@ -48,7 +48,7 @@ namespace InterfaceWPF
                 {
                     _gestionUtilisateurs.AjouterNouvelUtilisateur(loginEntré, passwordEntré);
                     _gestionUtilisateurs.Connexion(loginEntré, passwordEntré);
-                    openMainWindow();
+                    openMainWindow(true);
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace InterfaceWPF
             {
                 if (_gestionUtilisateurs.Connexion(loginEntré, passwordEntré))
                 {
-                    openMainWindow();
+                    openMainWindow(false);
                 }
                 else
                 {
@@ -78,9 +78,9 @@ namespace InterfaceWPF
             }
         }
 
-        private void openMainWindow()
+        private void openMainWindow(bool newUser)
         {
-            MainWindow win = new MainWindow(_gestionUtilisateurs);
+            MainWindow win = new MainWindow(_gestionUtilisateurs, newUser);
             win.Show();
 
             this.Close();
