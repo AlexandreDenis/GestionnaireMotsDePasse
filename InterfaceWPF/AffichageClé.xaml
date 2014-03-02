@@ -17,8 +17,8 @@
         <Label Name="labUrl" Content="URL" Grid.Row="0" Grid.Column="0"/>
         <Label Name="labId" Content="Id" Grid.Row="1" Grid.Column="0"/>
         <Label Name="labMdp" Content="Password" Grid.Row="2" Grid.Column="0"/>
-        <TextBox Name="inputUrl" Grid.Row="0" Grid.Column="1" Text="{Binding Url, Mode=TwoWay}" LostFocus="OnChanged"/>
-        <TextBox Name="inputId" Grid.Row="1" Grid.Column="1" Text="{Binding Username, Mode=TwoWay}" LostFocus="OnChanged"/>
-        <TextBox Name="inputMdp" Grid.Row="2" Grid.Column="1" Text="{Binding Password, Mode=TwoWay}" LostFocus="OnChanged"/>
+        <TextBox Name="inputUrl" Grid.Row="0" Grid.Column="1" Text="{Binding Url, Mode=TwoWay}" GotFocus="OnGotFocus" LostFocus="OnLostFocus"/>
+        <TextBox Name="inputId" Grid.Row="1" Grid.Column="1" Text="{Binding Username, Mode=TwoWay}" GotFocus="OnGotFocus" LostFocus="OnLostFocus"/>
+        <TextBox Name="inputMdp" Grid.Row="2" Grid.Column="1" Text="{Binding Password, Mode=TwoWay}" GotFocus="OnGotFocus" LostFocus="OnLostFocus"/>
     </Grid>
 </UserControl>

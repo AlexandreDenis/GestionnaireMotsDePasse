@@ -24,15 +24,29 @@ namespace InterfaceWPF
     {
         public event ChangedEventHandler Changed;
 
-        protected void OnChanged(object sender, RoutedEventArgs e)
-        {
-            if (Changed != null)
-                Changed(this, e);
-        }
+        private string oldURL;
+        private string oldId;
+        private string oldMdp;
 
         public AffichageClé()
         {
             InitializeComponent();
+        }
+
+        protected void OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (oldURL != inputUrl.Text || oldId != inputId.Text || oldMdp != inputMdp.Text)
+            {
+                if (Changed != null)
+                    Changed(this, e);
+            }
+        }
+
+        private void OnGotFocus(object sender, RoutedEventArgs e)
+        {
+            oldURL = inputUrl.Text;
+            oldId = inputId.Text;
+            oldMdp = inputMdp.Text;
         }
     }
 }
