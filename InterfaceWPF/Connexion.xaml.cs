@@ -88,7 +88,8 @@ namespace InterfaceWPF
 
         private void onKeyDownHandler(object sender, KeyEventArgs e)
         {
-
+            if (e.Key == Key.Enter)
+                onClickConnexionButton(sender, e);
         }
 
         private void onClosing(object sender, System.ComponentModel.CancelEventArgs e)
