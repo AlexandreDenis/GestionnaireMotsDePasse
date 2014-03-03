@@ -74,6 +74,7 @@ namespace InterfaceWPF
             }
 
             Entry.LenghtPassword = _database.LenghtPassword;
+            Entry.NbCaracSpec = _database.NbCaracSpec;
 
             InitializeComponent();
 
@@ -81,6 +82,7 @@ namespace InterfaceWPF
 
             //inputNbCarac.Text = Entry.LenghtPassword.ToString();
             inputNbCarac.DataContext = _database;
+            inputNbCaracSpec.DataContext = _database;
         }
 
         private StackPanel createHeader(string inText, bool isFolder)
@@ -254,9 +256,6 @@ namespace InterfaceWPF
 
                         father.Items.Add(newItem);
 
-                        /*Groupe pere = RechercherGroupe(_database.Root, ((TextBlock)((StackPanel)father.Header).Children[1]).Text);
-                        if (pere != null)
-                            pere.UpdateDateModification();*/
                         UpdateCascadeDateModification(newEntry, _database.Root);
                     }
                     else
@@ -534,8 +533,30 @@ namespace InterfaceWPF
             }
             catch (FormatException)
             {
-                MessageBox.Show("Valeur rentrée incorrecte");
+                MessageBox.Show("Valeur entrée incorrecte");
                 inputNbCarac.Text = Entry.LenghtPassword.ToString();
+            }
+        }
+
+
+        private void onNbCaracSpecChanged(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int newValue = int.Parse(inputNbCaracSpec.Text);
+
+                if (newValue > int.Parse(inputNbCarac.Text))
+                {
+                    MessageBox.Show("Valeur entrée incorrecte : valeur supérieure au nombre total de caractères");
+                    inputNbCaracSpec.Text = Entry.NbCaracSpec.ToString();
+                }
+                else
+                    Entry.NbCaracSpec = newValue;
+            }
+            catch (FormatException)
+            {
+                MessageBox.Show("Valeur entrée incorrecte");
+                inputNbCaracSpec.Text = Entry.NbCaracSpec.ToString();
             }
         }
 
@@ -573,9 +594,6 @@ namespace InterfaceWPF
 
                         father.Items.Add(newItem);
 
-                        /*Groupe pere = RechercherGroupe(_database.Root, ((TextBlock)((StackPanel)father.Header).Children[1]).Text);
-                        if (pere != null)
-                            pere.UpdateDateModification();*/
                         UpdateCascadeDateModification(newGroupe, _database.Root);
                     }
                     else

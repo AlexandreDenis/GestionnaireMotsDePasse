@@ -8,6 +8,6 @@ namespace GenerationMotDePasse
 {
     public interface IPasswordGenerator
     {
-        string GeneratePassword(int length);
+        string GeneratePassword(int length, int nbCaracSpec);
     }
 }

@@ -18,6 +18,13 @@ namespace Datas
             set { Entry.lenghtPassword = value; }
         }
 
+        private static int nbCaracSpec = 4;
+        public static int NbCaracSpec
+        {
+            get { return Entry.nbCaracSpec; }
+            set { Entry.nbCaracSpec = value; }
+        }
+
         /// <summary>
         /// Mot de passe pour l'URL
         /// </summary>
@@ -60,7 +67,7 @@ namespace Datas
         {
             username = inUsername;
             url = inUrl;
-            GeneratePassword(Entry.LenghtPassword);
+            GeneratePassword(Entry.LenghtPassword, Entry.NbCaracSpec);
         }
 
         /// <summary>
@@ -71,20 +78,20 @@ namespace Datas
         {
             username = "Unknown";
             url = "no url";
-            GeneratePassword(Entry.LenghtPassword);
+            GeneratePassword(Entry.LenghtPassword, Entry.NbCaracSpec);
         }
 
         /// <summary>
         /// Génère le mot de passe pour la clé courante
         /// </summary>
         /// <param name="length"></param>
-        public void GeneratePassword(int length)
+        public void GeneratePassword(int length, int nbCaracSpec)
         {
             IPasswordGenerator ipg = PasswordGeneratorFactory.Create();
 
             try
             {
-                password = ipg.GeneratePassword(length);
+                password = ipg.GeneratePassword(length, nbCaracSpec);
             }
             catch (ArgumentOutOfRangeException e)
             {

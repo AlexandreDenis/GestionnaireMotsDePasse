@@ -61,7 +61,7 @@ namespace Datas
         {
             entries.Add(inEntry);
 
-            inEntry.GeneratePassword(5);
+            inEntry.GeneratePassword(Entry.LenghtPassword, Entry.NbCaracSpec);
 
             //affichage des attributs de la nouvelle entrée
             Console.WriteLine("Clé : {0}", inEntry.Title);
