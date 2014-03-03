@@ -26,6 +26,13 @@ namespace Datas
             set { lenghtPassword = value; }
         }
 
+        private int nbCaracSpec = 4;
+        public int NbCaracSpec
+        {
+            get { return nbCaracSpec; }
+            set { nbCaracSpec = value; }
+        }
+
         /// <summary>
         /// Constructeur
         /// </summary>

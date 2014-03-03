@@ -75,6 +75,11 @@
                     <TextBox Name="inputNbCarac" Width="20" HorizontalAlignment="Left" DockPanel.Dock="Right" LostFocus="onNbCaracChanged"
                              Text="{Binding LenghtPassword, Mode=TwoWay}"/>
                 </DockPanel>
+                <DockPanel>
+                    <Label Content="Nb carac. spéciaux       :" DockPanel.Dock="Left"/>
+                    <TextBox Name="inputNbCaracSpec" Width="20" HorizontalAlignment="Left" DockPanel.Dock="Right" LostFocus="onNbCaracSpecChanged"
+                             Text="{Binding NbCaracSpec, Mode=TwoWay}"/>
+                </DockPanel>
             </StackPanel>
 
         </Grid>

@@ -14,14 +14,14 @@ namespace GenerationMotDePasse
         /// </summary>
         /// <param name="length"></param>
         /// <returns></returns>
-        public string GeneratePassword(int length)
+        public string GeneratePassword(int length, int nbCaracSpec)
         {
             if (length < 2)
             {
                 throw new ArgumentOutOfRangeException("length", "La longueur doit être supérieure ou égale à 2.");
             }
 
-            return System.Web.Security.Membership.GeneratePassword(length, length/2);
+            return System.Web.Security.Membership.GeneratePassword(length, nbCaracSpec);
         }
 
         /// <summary>
