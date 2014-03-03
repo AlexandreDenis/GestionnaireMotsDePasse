@@ -32,47 +32,27 @@ namespace DataStorage
         public Database Load(string filename, string key)
         {
             Database db = null;
-            string decryptedFilename = filename.Split('.')[0] + "D";
             FileStream fs = null;
+
+            fs = new FileStream(filename, FileMode.Open);
 
             try
             {
-                CryptageFichier.FileCrypter.DecryptFile(filename, decryptedFilename, key);
+                BinaryFormatter formatter = new BinaryFormatter();
 
-                fs = new FileStream(decryptedFilename, FileMode.Open);
+                db = (Database)formatter.Deserialize(fs);
 
-                //try
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-
-                    fs.Seek(0, SeekOrigin.Begin);
-                    db = (Database)formatter.Deserialize(fs);
-
-                    fs.Close();
-                    fs.Dispose();
-
-                    File.Delete(decryptedFilename);
-                }
-                /*catch (SerializationException e)
-                {
-                    MessageBox.Show("Echec du chargement : " + e.StackTrace);
-                }
-                finally
-                {
-                    fs.Close();
-                    fs.Dispose();
-                }*/
+                fs.Close();
+                fs.Dispose();
             }
-            catch (CryptographicException e)
+            catch (SerializationException e)
             {
-                if (fs != null)
-                {
-                    fs.Close();
-                    fs.Dispose();
-                }
-
-                File.Delete(decryptedFilename);
-                throw e;
+                MessageBox.Show("Echec du chargement : " + e.StackTrace);
+            }
+            finally
+            {
+                fs.Close();
+                fs.Dispose();
             }
 
             return db;
@@ -85,8 +65,6 @@ namespace DataStorage
         /// <param name="data"></param>
         public void Save(string filename, Database data, string key)
         {
-            string encryptedFilename = filename.Split('.')[0] + "C";
-
             //création du fichier de sauvegarde
             FileStream fs = new FileStream(filename, FileMode.Create);
             try
@@ -106,12 +84,6 @@ namespace DataStorage
 
             fs.Close();
             fs.Dispose();
-
-            //cryptage du fichier en sortie
-            CryptageFichier.FileCrypter.EncryptFile(filename, encryptedFilename, key);
-
-            File.Delete(filename);
-            FileSystem.Rename(encryptedFilename, filename);
         }
     }
 }
