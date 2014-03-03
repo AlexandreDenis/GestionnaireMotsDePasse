@@ -59,7 +59,7 @@ namespace InterfaceWPF
                     break;
             }
 
-            if (newUser || !File.Exists(_gestionUtilisateurs.UtilisateurCourant.Login))
+            if (newUser || !File.Exists(System.IO.Path.Combine(GestionUtilisateurs._usersDir, _gestionUtilisateurs.UtilisateurCourant.Login)))
             {
                 _database = new Database(new Groupe(_gestionUtilisateurs.UtilisateurCourant.Login, null, System.DateTime.Now, System.DateTime.Now, new List<Entry>(), new List<Groupe>()));
                 _database.Root.AddGroup(new Groupe("Applications", null, System.DateTime.Now, System.DateTime.Now, new List<Entry>(), new List<Groupe>()));
@@ -69,8 +69,8 @@ namespace InterfaceWPF
             else
             {
                 IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
-
-                _database = ids.Load(_gestionUtilisateurs.UtilisateurCourant.Login, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+                
+                _database = ids.Load(System.IO.Path.Combine(GestionUtilisateurs._usersDir, _gestionUtilisateurs.UtilisateurCourant.Login), _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
             }
 
             InitializeComponent();
@@ -410,7 +410,8 @@ namespace InterfaceWPF
         private void EnregistrerCompte()
         {
             IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
-                    ids.Save(_gestionUtilisateurs.UtilisateurCourant.Login, _database, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+            //ids.Save(_gestionUtilisateurs.UtilisateurCourant.Login, _database, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+            ids.Save(System.IO.Path.Combine(GestionUtilisateurs._usersDir, _gestionUtilisateurs.UtilisateurCourant.Login), _database, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
         }
 
         /// <summary>
@@ -454,8 +455,7 @@ namespace InterfaceWPF
        private void OuvrirCompte()
         {
             IDatabaseSerializer ids = DatabaseSerializerFactory.Create();
-
-            _database = ids.Load(_gestionUtilisateurs.UtilisateurCourant.Login, _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
+            _database = ids.Load(System.IO.Path.Combine(GestionUtilisateurs._usersDir, _gestionUtilisateurs.UtilisateurCourant.Login), _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
 
             Arborescence.Items.Clear();
             RemplirArborescence();

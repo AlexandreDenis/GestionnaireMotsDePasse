@@ -12,7 +12,10 @@ namespace Users
 {
     public class GestionUtilisateurs
     {
-        internal const string _usersFile = "users.bin";
+        //internal const string _usersFile = "users.bin";
+        public static string _usersDir = Path.Combine(Environment.GetFolderPath(
+                Environment.SpecialFolder.ApplicationData), "GestionnaireMotsDePasse");
+        public static string _usersFile = Path.Combine(_usersDir, "users.bin");
 
         private List<Utilisateur> _listeUtilisateurs;
 
@@ -26,6 +29,9 @@ namespace Users
         public GestionUtilisateurs()
         {
             _listeUtilisateurs = new List<Utilisateur>();
+
+            if (!Directory.Exists(_usersDir))
+                Directory.CreateDirectory(_usersDir);
 
             //chargement de la liste des utilisateurs
             if (File.Exists(_usersFile))
