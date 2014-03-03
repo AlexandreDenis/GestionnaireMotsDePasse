@@ -27,6 +27,7 @@ namespace InterfaceWPF
         {
             _gestionUtilisateurs = new GestionUtilisateurs();
             InitializeComponent();
+            loginWPF.Focus();
         }
 
         private void onClickInscriptionButton(object sender, RoutedEventArgs e)
