@@ -20,6 +20,7 @@ namespace ApplicationConsole
             Database _database;
             GestionUtilisateurs _gestionUtilisateurs = new GestionUtilisateurs();
             Groupe root;
+            Groupe courant;
 
             //Gestion de la configuration
             CustomConfigurationSection customConfig = CustomConfigurationSection.GetSection();
@@ -53,6 +54,7 @@ namespace ApplicationConsole
                 _database = ids.Load(System.IO.Path.Combine(GestionUtilisateurs._usersDir, _gestionUtilisateurs.UtilisateurCourant.Login), _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
 
                 root = _database.Root;
+                courant = root;
 
                 Console.WriteLine("Pour des informations, veuillez entrer la commande help");
 
@@ -67,17 +69,18 @@ namespace ApplicationConsole
                                 Console.WriteLine("->Pour afficher l'arborescence : ls");
                                 Console.WriteLine("->Pour afficher les informations d'une clé : print nom_de_la_clé");
                                 Console.WriteLine("->Pour afficher l'arborescence d'un répertoire : ls nom_répertoire");
+                                Console.WriteLine("->Pour changer de répertoire : cd");
                                 Console.WriteLine("->Pour quitter : quit");
                                 Console.WriteLine("->Pour afficher l'aide : help");
                                 break;
                             case "ls":
                                 if (param.Count() == 2)
                                 {
-                                    ChercherDossier(param.ElementAt(1), root);
-            }
+                                    ChercherDossier(param.ElementAt(1), courant);
+                                }
                                 else if (param.Count() == 1)
                                 {
-                                    Afficher(root, 0);
+                                    Afficher(courant, 0);
                                 }
                                 else
                                 {
@@ -92,6 +95,20 @@ namespace ApplicationConsole
                                     Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("la clé n'existe pas");
                                     Console.ForegroundColor = ConsoleColor.White;
+                                }
+                                break;
+                            case "cd":
+                                if (param.Count() == 1)
+                                {
+                                    courant = root;
+                                }
+                                else
+                                {
+                                    Groupe courantNew = Deplacer(param.ElementAt(1), courant, root);
+                                    if (courantNew != null)
+                                    {
+                                        courant = courantNew;
+                                    }
                                 }
                                 break;
                             default:
@@ -117,7 +134,6 @@ namespace ApplicationConsole
         static private void ChercherDossier(string chemin,Groupe node)
         {
             String[] dossiers = chemin.Split(new Char[] {'/'});
-
             Groupe suivant = null;
 
             foreach (Groupe g in node.Groups)
@@ -204,6 +220,70 @@ namespace ApplicationConsole
                 res = ChercherCle(keyName, g);
             }
             return res;
+        }
+
+        static private Groupe RechercherPere(Groupe fils,Groupe root)
+        {
+            Groupe pere = null;
+
+            foreach (Groupe g in root.Groups)
+            {
+                if (g.Title.Equals(fils.Title))
+                {
+                    pere = root;
+                    break;
+                }
+            }
+
+            if (pere == null)
+            {
+                foreach (Groupe g in root.Groups)
+                {
+                    pere = RechercherPere(fils, g);
+
+                    if (pere != null)
+                        break;
+                }
+            }
+
+            return pere;
+        }
+
+        static private Groupe Deplacer(string chemin, Groupe courant,Groupe root)
+        {
+            String[] dossiers = chemin.Split(new Char[] { '/' });
+            Groupe suivant = null;
+
+            if (dossiers.ElementAt(0).Equals(".."))
+            {
+                suivant = RechercherPere(courant, root);
+            }
+            else
+            {
+                foreach (Groupe g in courant.Groups)
+                {
+                    if (g.Title.Equals(dossiers.ElementAt(0)))
+                    {
+                        suivant = g;
+                        break;
+                    }
+                }
+            }
+
+            if (suivant != null)
+            {
+                if (dossiers.Count() != 1)
+                {
+                    suivant = Deplacer(chemin.Substring(dossiers.ElementAt(0).Length + 1), suivant,root);
+                }
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Le chemin n'existe pas");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            return suivant;
         }
     }
 }
