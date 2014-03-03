@@ -19,6 +19,13 @@ namespace Datas
             set { root = value; }
         }
 
+        private int lenghtPassword = 8;
+        public int LenghtPassword
+        {
+            get { return lenghtPassword; }
+            set { lenghtPassword = value; }
+        }
+
         /// <summary>
         /// Constructeur
         /// </summary>

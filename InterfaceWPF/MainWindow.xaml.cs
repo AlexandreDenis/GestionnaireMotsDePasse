@@ -73,11 +73,14 @@ namespace InterfaceWPF
                 _database = ids.Load(System.IO.Path.Combine(GestionUtilisateurs._usersDir, _gestionUtilisateurs.UtilisateurCourant.Login), _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
             }
 
+            Entry.LenghtPassword = _database.LenghtPassword;
+
             InitializeComponent();
 
             this.Title += " : " + _gestionUtilisateurs.UtilisateurCourant.Login;
 
-            inputNbCarac.Text = Entry.LenghtPassword.ToString();
+            //inputNbCarac.Text = Entry.LenghtPassword.ToString();
+            inputNbCarac.DataContext = _database;
         }
 
         private StackPanel createHeader(string inText, bool isFolder)
