@@ -250,6 +250,11 @@ namespace InterfaceWPF
                         newItem.Items.Add(newKey);
 
                         father.Items.Add(newItem);
+
+                        /*Groupe pere = RechercherGroupe(_database.Root, ((TextBlock)((StackPanel)father.Header).Children[1]).Text);
+                        if (pere != null)
+                            pere.UpdateDateModification();*/
+                        UpdateCascadeDateModification(newEntry, _database.Root);
                     }
                     else
                         MessageBox.Show("Impossible de créer la clé : un noeud du même nom existe déjà dans l'arborescence.");
@@ -272,7 +277,10 @@ namespace InterfaceWPF
             Entry entry = (Entry)affKey.DataContext;
 
             if (entry != null)
+            {
                 entry.UpdateDateModification();
+                UpdateCascadeDateModification(entry, _database.Root);
+            }
         }
 
         /// <summary>
@@ -300,6 +308,8 @@ namespace InterfaceWPF
 
                             if (item.Parent is TreeViewItem)
                                 (item.Parent as TreeViewItem).Items.Remove(item);
+
+                            UpdateCascadeDateModification(father, _database.Root);
                         }
                     }
                     else
@@ -559,6 +569,11 @@ namespace InterfaceWPF
                         }
 
                         father.Items.Add(newItem);
+
+                        /*Groupe pere = RechercherGroupe(_database.Root, ((TextBlock)((StackPanel)father.Header).Children[1]).Text);
+                        if (pere != null)
+                            pere.UpdateDateModification();*/
+                        UpdateCascadeDateModification(newGroupe, _database.Root);
                     }
                     else
                         MessageBox.Show("Impossible de créer le dossier : un noeud du même nom existe déjà dans l'arborescence.");
@@ -595,6 +610,8 @@ namespace InterfaceWPF
 
                             if (item.Parent is TreeViewItem)
                                 (item.Parent as TreeViewItem).Items.Remove(item);
+
+                            UpdateCascadeDateModification(father, _database.Root);
                         }
                     }
                     else
@@ -631,6 +648,7 @@ namespace InterfaceWPF
                             {
                                 groupe.Title = title;
                                 groupe.UpdateDateModification();
+                                UpdateCascadeDateModification(groupe, _database.Root);
                             }
                         }
                         else
@@ -640,6 +658,7 @@ namespace InterfaceWPF
                             {
                                 entry.Title = title;
                                 entry.UpdateDateModification();
+                                UpdateCascadeDateModification(entry, _database.Root);
                             }
                         }
 
@@ -794,6 +813,20 @@ namespace InterfaceWPF
             }
 
             return res;
+        }
+
+        private void UpdateCascadeDateModification(Node inNode, Groupe inPere)
+        {
+            if (inNode != null && inPere != null)
+            {
+                if (isNodeExisting(inNode.Title, inPere))
+                    inPere.UpdateDateModification();
+
+                foreach (Groupe groupe in inPere.Groups)
+                {
+                    UpdateCascadeDateModification(inNode, groupe);
+                }
+            }
         }
     }
 }
