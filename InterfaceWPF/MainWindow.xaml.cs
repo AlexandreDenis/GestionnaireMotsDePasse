@@ -529,7 +529,14 @@ namespace InterfaceWPF
             try
             {
                 int newValue = int.Parse(inputNbCarac.Text);
-                Entry.LenghtPassword = newValue;
+
+                if (newValue < int.Parse(inputNbCaracSpec.Text))
+                {
+                    MessageBox.Show("Valeur entrée incorrecte : valeur inférieure au nombre de caractères spéciaux");
+                    inputNbCarac.Text = Entry.LenghtPassword.ToString();
+                }
+                else
+                    Entry.LenghtPassword = newValue;
             }
             catch (FormatException)
             {
