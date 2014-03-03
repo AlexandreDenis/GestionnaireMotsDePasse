@@ -74,7 +74,7 @@ namespace ApplicationConsole
                                 if (param.Count() == 2)
                                 {
                                     ChercherDossier(param.ElementAt(1), root);
-                                }
+            }
                                 else if (param.Count() == 1)
                                 {
                                     Afficher(root, 0);

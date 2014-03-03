@@ -72,7 +72,8 @@
                 Click="onAllerURLClicked"/>
                 <DockPanel>
                     <Label Content="Nb carac. pour le mdp :" DockPanel.Dock="Left"/>
-                    <TextBox Name="inputNbCarac" Width="20" HorizontalAlignment="Left" DockPanel.Dock="Right" LostFocus="onNbCaracChanged"/>
+                    <TextBox Name="inputNbCarac" Width="20" HorizontalAlignment="Left" DockPanel.Dock="Right" LostFocus="onNbCaracChanged"
+                             Text="{Binding LenghtPassword, Mode=TwoWay}"/>
                 </DockPanel>
             </StackPanel>
 

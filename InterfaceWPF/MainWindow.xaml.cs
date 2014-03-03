@@ -73,11 +73,14 @@ namespace InterfaceWPF
                 _database = ids.Load(System.IO.Path.Combine(GestionUtilisateurs._usersDir, _gestionUtilisateurs.UtilisateurCourant.Login), _gestionUtilisateurs.UtilisateurCourant.CléDeCryptage);
             }
 
+            Entry.LenghtPassword = _database.LenghtPassword;
+
             InitializeComponent();
 
             this.Title += " : " + _gestionUtilisateurs.UtilisateurCourant.Login;
 
-            inputNbCarac.Text = Entry.LenghtPassword.ToString();
+            //inputNbCarac.Text = Entry.LenghtPassword.ToString();
+            inputNbCarac.DataContext = _database;
         }
 
         private StackPanel createHeader(string inText, bool isFolder)
@@ -228,29 +231,41 @@ namespace InterfaceWPF
                 {
                     string title = Interaction.InputBox("Entrez le nom de la nouvelle clé :", "Nom de la clé");
 
-                    //Recherche de l'élément de la Database correspondant à l'élément père
-                    Groupe groupePere = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)father.Header).Children[1]).Text);
-
-                    newItem = new TreeViewItem();
-                    newItem.Header = createHeader(title, false);
-
-                    newEntry = new Entry();
-                    newEntry.Title = title;
-                    if (groupePere != null)
+                    if(!isNodeExisting(title, _database.Root))
                     {
-                        groupePere.Entries.Add(newEntry);
+                        //Recherche de l'élément de la Database correspondant à l'élément père
+                        Groupe groupePere = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)father.Header).Children[1]).Text);
+
+                        newItem = new TreeViewItem();
+                        newItem.Header = createHeader(title, false);
+
+                        newEntry = new Entry();
+                        newEntry.Title = title;
+                        if (groupePere != null)
+                        {
+                            groupePere.Entries.Add(newEntry);
+                        }
+
+                        newKey = new AffichageClé();
+                        newKey.DataContext = newEntry;
+                        newKey.Changed += onInputTextChanged;
+
+                        newItem.Items.Add(newKey);
+
+                        father.Items.Add(newItem);
+
+                        /*Groupe pere = RechercherGroupe(_database.Root, ((TextBlock)((StackPanel)father.Header).Children[1]).Text);
+                        if (pere != null)
+                            pere.UpdateDateModification();*/
+                        UpdateCascadeDateModification(newEntry, _database.Root);
                     }
-
-                    newKey = new AffichageClé();
-                    newKey.DataContext = newEntry;
-                    newKey.Changed += onInputTextChanged;
-
-                    newItem.Items.Add(newKey);
-
-                    father.Items.Add(newItem);
+                    else
+                        MessageBox.Show("Impossible de créer la clé : un noeud du même nom existe déjà dans l'arborescence.");
                 }
                 else
+                {
                     MessageBox.Show("Vous ne pouvez ajouter des clés qu'à des dossiers.");
+                }
             }
             catch (InvalidCastException)
             {
@@ -265,7 +280,10 @@ namespace InterfaceWPF
             Entry entry = (Entry)affKey.DataContext;
 
             if (entry != null)
+            {
                 entry.UpdateDateModification();
+                UpdateCascadeDateModification(entry, _database.Root);
+            }
         }
 
         /// <summary>
@@ -293,6 +311,8 @@ namespace InterfaceWPF
 
                             if (item.Parent is TreeViewItem)
                                 (item.Parent as TreeViewItem).Items.Remove(item);
+
+                            UpdateCascadeDateModification(father, _database.Root);
                         }
                     }
                     else
@@ -536,23 +556,36 @@ namespace InterfaceWPF
                 {
                     string title = Interaction.InputBox("Entrez le nom de la nouvelle clé :", "Nom de la clé");
 
-                    //Recherche de l'élément de la Database correspondant à l'élément père
-                    Groupe groupePere = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)father.Header).Children[1]).Text);
-
-                    newItem = new TreeViewItem();
-                    newItem.Header = createHeader(title, true);
-
-                    newGroupe = new Groupe();
-                    newGroupe.Title = title;
-                    if (groupePere != null)
+                    if(!isNodeExisting(title, _database.Root))
                     {
-                        groupePere.Groups.Add(newGroupe);
-                    }
+                        //Recherche de l'élément de la Database correspondant à l'élément père
+                        Groupe groupePere = RechercherGroupe(_database.Root, (string)((TextBlock)((StackPanel)father.Header).Children[1]).Text);
 
-                    father.Items.Add(newItem);
+                        newItem = new TreeViewItem();
+                        newItem.Header = createHeader(title, true);
+
+                        newGroupe = new Groupe();
+                        newGroupe.Title = title;
+                        if (groupePere != null)
+                        {
+                            groupePere.Groups.Add(newGroupe);
+                        }
+
+                        father.Items.Add(newItem);
+
+                        /*Groupe pere = RechercherGroupe(_database.Root, ((TextBlock)((StackPanel)father.Header).Children[1]).Text);
+                        if (pere != null)
+                            pere.UpdateDateModification();*/
+                        UpdateCascadeDateModification(newGroupe, _database.Root);
+                    }
+                    else
+                        MessageBox.Show("Impossible de créer le dossier : un noeud du même nom existe déjà dans l'arborescence.");
+                        
                 }
                 else
+                {
                     MessageBox.Show("Vous ne pouvez ajouter des dossiers qu'à des dossiers.");
+                }
             }
             catch (InvalidCastException)
             {
@@ -580,6 +613,8 @@ namespace InterfaceWPF
 
                             if (item.Parent is TreeViewItem)
                                 (item.Parent as TreeViewItem).Items.Remove(item);
+
+                            UpdateCascadeDateModification(father, _database.Root);
                         }
                     }
                     else
@@ -607,26 +642,35 @@ namespace InterfaceWPF
 
                     string title = Interaction.InputBox("Entrez le nouveau nom :", "Nom du noeud");
 
-                    if (!isClé(item))
+                    if (!isNodeExisting(title, _database.Root))
                     {
-                        Groupe groupe = RechercherGroupe(_database.Root, textBlock.Text);
-                        if (groupe != null)
+                        if (!isClé(item))
                         {
-                            groupe.Title = title;
-                            groupe.UpdateDateModification();
+                            Groupe groupe = RechercherGroupe(_database.Root, textBlock.Text);
+                            if (groupe != null)
+                            {
+                                groupe.Title = title;
+                                groupe.UpdateDateModification();
+                                UpdateCascadeDateModification(groupe, _database.Root);
+                            }
                         }
+                        else
+                        {
+                            Entry entry = RechercherEntry(_database.Root, textBlock.Text);
+                            if (entry != null)
+                            {
+                                entry.Title = title;
+                                entry.UpdateDateModification();
+                                UpdateCascadeDateModification(entry, _database.Root);
+                            }
+                        }
+
+                        textBlock.Text = title;
                     }
                     else
                     {
-                        Entry entry = RechercherEntry(_database.Root, textBlock.Text);
-                        if (entry != null)
-                        {
-                            entry.Title = title;
-                            entry.UpdateDateModification();
-                        }
+                        MessageBox.Show("Impossible de réaliser le renommage : un noeud du même nom existe déjà dans l'arborescence.");
                     }
-
-                    textBlock.Text = title;
                 }
                 else
                 {
@@ -734,5 +778,58 @@ namespace InterfaceWPF
          {
              Enregistrer();
          }
+
+        /// <summary>
+        /// Recherche si un noeud d'un nom en particulier existe déjà dans l'arborescence ou pas
+        /// </summary>
+        /// <param name="inTitle"></param>
+        /// <param name="inRoot"></param>
+        /// <returns></returns>
+        private bool isNodeExisting(string inTitle, Groupe inRoot)
+        {
+            bool res = false;
+
+            if(inRoot.Title == inTitle)
+                res = true;
+
+            if(!res)
+            {
+                foreach (Groupe groupe in inRoot.Groups)
+                {
+                    res = isNodeExisting(inTitle, groupe);
+
+                    if (res)
+                        break;
+                }
+
+                if(!res)
+                {
+                    foreach (Entry entry in inRoot.Entries)
+                    {
+                        if (entry.Title == inTitle)
+                        {
+                            res = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        private void UpdateCascadeDateModification(Node inNode, Groupe inPere)
+        {
+            if (inNode != null && inPere != null)
+            {
+                if (isNodeExisting(inNode.Title, inPere))
+                    inPere.UpdateDateModification();
+
+                foreach (Groupe groupe in inPere.Groups)
+                {
+                    UpdateCascadeDateModification(inNode, groupe);
+                }
+            }
+        }
     }
 }
