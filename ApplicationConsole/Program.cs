@@ -87,7 +87,17 @@ namespace ApplicationConsole
                                 }
                                 break;
                             case "print":
-                                Console.WriteLine("print demandé");
+                                if (!ChercherCle(param.ElementAt(1), root))
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("la clé n'existe pas");
+                                    Console.ForegroundColor = ConsoleColor.White;
+                                }
+                                break;
+                            default:
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("commande inconnue");
+                                Console.ForegroundColor = ConsoleColor.White;
                                 break;
                         }
                     }
@@ -171,6 +181,29 @@ namespace ApplicationConsole
                 Console.WriteLine("Le dossier n'existe pas");
                 Console.ForegroundColor = ConsoleColor.White;
             }
+        }
+
+
+        static private bool ChercherCle(string keyName, Groupe node)
+        {
+            bool res = false;
+            foreach (Entry e in node.Entries)
+            {
+                if (e.Title.Equals(keyName))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("clé : ");
+                    Console.WriteLine(e.Title+" id="+e.Username+" pwd="+e.Password);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    res = true;
+                }
+            }
+
+            foreach (Groupe g in node.Groups)
+            {
+                res = ChercherCle(keyName, g);
+            }
+            return res;
         }
     }
 }
