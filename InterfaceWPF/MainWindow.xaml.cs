@@ -14,6 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.VisualBasic;
 using System.Windows.Forms;
+using System.Security.Cryptography;
+using System.IO;
+using System.Threading;
 
 using Datas;
 using DataStorage;
@@ -22,9 +25,6 @@ using Users;
 using MessageBox = System.Windows.MessageBox;
 using TextBlock = System.Windows.Controls.TextBlock;
 using Clipboard = System.Windows.Clipboard;
-using System.Security.Cryptography;
-using System.IO;
-using System.Threading;
 
 namespace InterfaceWPF
 {
