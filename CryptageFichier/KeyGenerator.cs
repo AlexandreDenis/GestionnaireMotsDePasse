@@ -12,10 +12,10 @@ namespace CryptageFichier
         // Génère une clé de 64 bits
         public static string GenerateKey()
         {
-            // Create an instance of Symetric Algorithm. Key and IV is generated automatically.
+            // Créé une instance de DESCryptoServiceProvider. La clé et le vecteur IV sont générés automatiquement
             DESCryptoServiceProvider desCrypto = (DESCryptoServiceProvider)DESCryptoServiceProvider.Create();
 
-            // Use the Automatically generated key for Encryption. 
+            //Génère une clé pour l'encryptage des données
             return ASCIIEncoding.ASCII.GetString(desCrypto.Key);
         }
     }
