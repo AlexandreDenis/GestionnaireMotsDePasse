@@ -49,14 +49,35 @@ namespace TestAPI
             Console.ForegroundColor = ConsoleColor.White;
 
             //Test d'accès avec connexion sur clé non valide
-            Console.WriteLine("Test d'accès avec connexion sur clé non valide :");
+            Console.WriteLine("Test d'accès avec connexion sur clé non valide (l'utilisateur connecté ne doit pas avoir de clé nommée \"Wikipedia\") :");
             Console.WriteLine("\tGetKey(\"Wikipedia\") = " + NullToString((_gestionnaireMDP.GetKey("Wikipedia"))));
 
             //Test d'accès avec connexion sur clé valide
-            Console.WriteLine("Test d'accès avec connexion sur clé valide :");
+            Console.WriteLine("Test d'accès avec connexion sur clé valide (l'utilisateur connecté doit avoir une clé nommée \"Facebook\"):");
             Console.WriteLine("\tGetKey(\"Facebook\") = " + NullToString((_gestionnaireMDP.GetKey("Facebook"))));
 
-            Console.ReadLine();
+            string choix;
+            string choixQuit;
+            while (true)
+            {
+                Console.Write("Entrez le nom d'une clé :");
+                choix = Console.ReadLine();
+
+                if (choix == "quit")
+                {
+                    do
+                    {
+                        Console.WriteLine("Souhaitez-vous réelement quitter l'application ? (y/n)");
+                        choixQuit = Console.ReadLine();
+                    } while (choixQuit != "y" && choixQuit != "n");
+
+                    if (choixQuit == "y")
+                        break;
+                    
+                }
+                Console.WriteLine("\tGetKey(\"" + choix + "\") = " + NullToString((_gestionnaireMDP.GetKey(choix))));
+
+            }
         }
     }
 }
