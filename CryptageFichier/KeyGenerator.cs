@@ -7,6 +7,9 @@ using System.Text;
 
 namespace CryptageFichier
 {
+    /// <summary>
+    /// Générateur de clé pour le cryptage des données
+    /// </summary>
     public static class KeyGenerator
     {
         // Génère une clé de 64 bits
