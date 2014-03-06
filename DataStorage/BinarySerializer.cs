@@ -14,10 +14,13 @@ using Microsoft.VisualBasic;
 
 namespace DataStorage
 {
+    /// <summary>
+    /// Sérialiseur binaire de la classe Database
+    /// </summary>
     public class BinarySerializer : IDatabaseSerializer
     {
         /// <summary>
-        /// Constructeur
+        /// Constructeur de la classe BinarySerializer
         /// </summary>
         public BinarySerializer()
         {
@@ -25,10 +28,11 @@ namespace DataStorage
         }
 
         /// <summary>
-        /// Chargement d'une base de données à partir d'un fichier
+        /// Chargement d'une Database à partir d'un fichier binaire
         /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
+        /// <param name="filename">Nom du fichier à charger</param>
+        /// <param name="key">Paramètre non utilisé pour la sérialisation binaire</param>
+        /// <returns>Instance de la Database résultant de la désérialisation du fichier</returns>
         public Database Load(string filename, string key)
         {
             Database db = null;
@@ -40,6 +44,7 @@ namespace DataStorage
             {
                 BinaryFormatter formatter = new BinaryFormatter();
 
+                //Désérialisation du fichier en entrée
                 db = (Database)formatter.Deserialize(fs);
 
                 fs.Close();
@@ -51,6 +56,7 @@ namespace DataStorage
             }
             finally
             {
+                //Libération du flux utilisé
                 fs.Close();
                 fs.Dispose();
             }
@@ -59,17 +65,21 @@ namespace DataStorage
         }
 
         /// <summary>
-        /// Sauvegarde d'une base de données dans un fichier
+        /// Sauvegarde d'une Database dans un fichier binaire
         /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="data"></param>
+        /// <param name="filename">Nom du fichier en sortie de la sérialisation</param>
+        /// <param name="data">Instance de la Database à sérialiser</param>
+        /// <param name="key">Paramètre non utilisé pour la sérialisation binaire</param>
         public void Save(string filename, Database data, string key)
         {
             //création du fichier de sauvegarde
             FileStream fs = new FileStream(filename, FileMode.Create);
+
             try
             {
                 BinaryFormatter formatter = new BinaryFormatter();
+
+                //Sérialisation de la Database
                 formatter.Serialize(fs, data);
             }
             catch (Exception e)
@@ -78,10 +88,12 @@ namespace DataStorage
             }
             finally
             {
+                //Libération du flux utilisé pour la sérialisation
                 fs.Close();
                 fs.Dispose();
             }
 
+            //Libération du flux utilisé pour la sérialisation
             fs.Close();
             fs.Dispose();
         }
