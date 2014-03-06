@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BinarySerializer.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="DatabaseSerializerFactory.cs" />
     <Compile Include="IDatabaseSerializer.cs" />
     <Compile Include="MyXmlSerializer.cs" />

@@ -41,7 +41,6 @@
   <ItemGroup>
     <Compile Include="API_Database.cs" />
     <Compile Include="API_Key.cs" />
-    <Compile Include="Class1.cs" />
     <Compile Include="GestionnaireMDP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
