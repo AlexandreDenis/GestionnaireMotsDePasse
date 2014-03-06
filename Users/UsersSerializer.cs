@@ -12,10 +12,13 @@ using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace Users
 {
+    /// <summary>
+    /// Sérialiseur/Désérialiseur de la liste des utilisateurs
+    /// </summary>
     public class UsersSerializer
     {
         /// <summary>
-        /// Constructeur
+        /// Constructeur de la classe UsersSerializer
         /// </summary>
         public UsersSerializer()
         {
@@ -23,20 +26,22 @@ namespace Users
         }
 
         /// <summary>
-        /// Chargement d'une base de données à partir d'un fichier
+        /// Chargement de la liste des utilisateurs à partir d'un fichier
         /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
+        /// <returns>Liste des utilisateurs résultant de la désérialisation</returns>
         public List<Utilisateur> Load()
         {
             List<Utilisateur> users = new List<Utilisateur>();
             string filename = GestionUtilisateurs._usersFile;
 
+            //ouverture du fichier à désérialiser
             FileStream fs = new FileStream(filename, FileMode.Open);
+
             try
             {
                 BinaryFormatter formatter = new BinaryFormatter();
 
+                //Désérialisation du fichier
                 users = (List<Utilisateur>)formatter.Deserialize(fs);
             }
             catch (SerializationException)
@@ -45,6 +50,7 @@ namespace Users
             }
             finally
             {
+                //Libération du flux utilisé pour la désérialisation
                 fs.Close();
                 fs.Dispose();
             }
@@ -53,10 +59,9 @@ namespace Users
         }
 
         /// <summary>
-        /// Sauvegarde d'une base de données dans un fichier
+        /// Sauvegarde d'une liste d'utilisateurs dans un fichier
         /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="data"></param>
+        /// <param name="users">Liste des utilisateurs à sérialiser</param>
         public void Save(List<Utilisateur> users)
         {
             string filename = GestionUtilisateurs._usersFile;
@@ -67,6 +72,7 @@ namespace Users
             BinaryFormatter formatter = new BinaryFormatter();
             try
             {
+                //Sérialisation de la liste des utilisateurs dans le fichier
                 formatter.Serialize(fs, users);
             }
             catch (SerializationException)
@@ -75,6 +81,7 @@ namespace Users
             }
             finally
             {
+                //Libération du flux utilisé pour la sérialisation
                 fs.Close();
                 fs.Dispose();
             }
