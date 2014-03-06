@@ -535,6 +535,11 @@ namespace InterfaceWPF
                     MessageBox.Show("Valeur entrée incorrecte : valeur inférieure au nombre de caractères spéciaux");
                     inputNbCarac.Text = Entry.LenghtPassword.ToString();
                 }
+                else if (newValue < 2)
+                {
+                    MessageBox.Show("Valeur entrée incorrecte : celle-ci doit être supérieure ou égale à 2");
+                    inputNbCarac.Text = Entry.LenghtPassword.ToString();
+                }
                 else
                     Entry.LenghtPassword = newValue;
             }
