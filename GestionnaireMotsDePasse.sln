@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptageFichier", "Cryptage
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationConsole", "ApplicationConsole\ApplicationConsole.csproj", "{22CA2238-A807-4B52-AE4F-0781E7E8B878}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API_GMP", "API_GMP\API_GMP.csproj", "{20002ED9-A3D3-4BA9-BB0C-142A2AEB77D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestAPI", "TestAPI\TestAPI.csproj", "{B06776E2-6CA6-434C-8082-AA63D0CFD788}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,14 @@ Global
 		{22CA2238-A807-4B52-AE4F-0781E7E8B878}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22CA2238-A807-4B52-AE4F-0781E7E8B878}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22CA2238-A807-4B52-AE4F-0781E7E8B878}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20002ED9-A3D3-4BA9-BB0C-142A2AEB77D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20002ED9-A3D3-4BA9-BB0C-142A2AEB77D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20002ED9-A3D3-4BA9-BB0C-142A2AEB77D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20002ED9-A3D3-4BA9-BB0C-142A2AEB77D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B06776E2-6CA6-434C-8082-AA63D0CFD788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B06776E2-6CA6-434C-8082-AA63D0CFD788}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B06776E2-6CA6-434C-8082-AA63D0CFD788}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B06776E2-6CA6-434C-8082-AA63D0CFD788}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

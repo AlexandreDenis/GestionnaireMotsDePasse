@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace Datas
 {
+    /// <summary>
+    /// Classe représentant un dossier
+    /// </summary>
     [Serializable]
     public class Groupe : Node
     {
         /// <summary>
-        /// Liste d'entrées du groupe
+        /// Liste des clés du groupe
         /// </summary>
         private List<Entry> entries;
         public List<Entry> Entries
@@ -20,7 +23,7 @@ namespace Datas
         }
 
         /// <summary>
-        /// Liste de groupes du groupe
+        /// Liste des sous-dossiers du groupe
         /// </summary>
         private List<Groupe> groups;
         public List<Groupe> Groups
@@ -30,12 +33,14 @@ namespace Datas
         }
 
         /// <summary>
-        /// Constructeur
+        /// Constructeur de la classe Groupe
         /// </summary>
-        /// <param name="inTitle"></param>
-        /// <param name="inExpiration"></param>
-        /// <param name="inEntries"></param>
-        /// <param name="inGroups"></param>
+        /// <param name="inTitle">Nom du groupe</param>
+        /// <param name="inExpiration">Date d'expiration du groupe</param>
+        /// <param name="inDateCreation">Date de création du groupe</param>
+        /// <param name="inDateModification">Date de modification du groupe</param>
+        /// <param name="inEntries">Liste des clés du groupe</param>
+        /// <param name="inGroups">Liste des sous-dossiers du groupe</param>
         public Groupe(string inTitle, Nullable<DateTime> inExpiration, DateTime inDateCreation, DateTime inDateModification, IEnumerable<Entry> inEntries, IEnumerable<Groupe> inGroups)
             :base(inTitle,inExpiration,inDateCreation,inDateModification)
         {
@@ -54,13 +59,14 @@ namespace Datas
         }
 
         /// <summary>
-        /// Ajout d'une entrée au groupe
+        /// Ajout d'une clé au groupe
         /// </summary>
-        /// <param name="inEntry"></param>
+        /// <param name="inEntry">Clé à ajouter au groupe</param>
         public void AddEntry(Entry inEntry)
         {
             entries.Add(inEntry);
 
+            //Génération du mot de passe pour cette nouvelle clé
             inEntry.GeneratePassword(Entry.LenghtPassword, Entry.NbCaracSpec);
 
             //affichage des attributs de la nouvelle entrée
@@ -71,16 +77,16 @@ namespace Datas
         }
 
         /// <summary>
-        /// Ajout d'un groupe au groupe
+        /// Ajout d'un sous-dossier au groupe
         /// </summary>
-        /// <param name="inGroup"></param>
+        /// <param name="inGroup">Sous-dossier à ajouter au groupe</param>
         public void AddGroup(Groupe inGroup)
         {
             groups.Add(inGroup);
         }
 
         /// <summary>
-        /// Conversion en string
+        /// Conversion de la classe Groupe en string
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -93,6 +99,7 @@ namespace Datas
             chaine.Append(Expiration);
             chaine.Append(")\n");
 
+            //On affiche chaque sous-dossier du groupe
             foreach (Groupe grp in Groups)
             {
                 chaine.Append(" ");
@@ -100,6 +107,7 @@ namespace Datas
                 chaine.Append("\n");
             }
 
+            //On affiche chaque clé du groupe
             foreach (Entry ent in Entries)
             {
                 chaine.Append(" | ");

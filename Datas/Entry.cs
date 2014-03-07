@@ -8,9 +8,15 @@ using GenerationMotDePasse;
 
 namespace Datas
 {
+    /// <summary>
+    /// Classe représentant une clé
+    /// </summary>
     [Serializable]
     public class Entry : Node
     {
+        /// <summary>
+        /// Longueur totale des mots de passe générés pour les clés
+        /// </summary>
         private static int lenghtPassword = 8;
         public static int LenghtPassword
         {
@@ -18,6 +24,9 @@ namespace Datas
             set { Entry.lenghtPassword = value; }
         }
 
+        /// <summary>
+        /// Nombre de caractères spéciaux dans les mots de passe générés pour les clés
+        /// </summary>
         private static int nbCaracSpec = 4;
         public static int NbCaracSpec
         {
@@ -56,12 +65,14 @@ namespace Datas
         }
 
         /// <summary>
-        /// Constructeur
+        /// Constructeur de la classe Entry
         /// </summary>
-        /// <param name="inTitle"></param>
-        /// <param name="inExpiration"></param>
-        /// <param name="inUsername"></param>
-        /// <param name="inUrl"></param>
+        /// <param name="inTitle">Nom de le clé</param>
+        /// <param name="inExpiration">Date d'expiration de la clé</param>
+        /// <param name="inDateCreation">Date de création de la clé</param>
+        /// <param name="inDateModification">Date de modification de la clé</param>
+        /// <param name="inUsername">Identifiant correspondant à la clé</param>
+        /// <param name="inUrl">Mot de passe correspondant à la clé</param>
         public Entry(string inTitle, Nullable<DateTime> inExpiration, DateTime inDateCreation, DateTime inDateModification, string inUsername, string inUrl)
             : base(inTitle, inExpiration,inDateCreation,inDateModification)
         {
@@ -71,7 +82,7 @@ namespace Datas
         }
 
         /// <summary>
-        /// Constructeur par défaut
+        /// Constructeur par défaut de la classe Entry
         /// </summary>
         public Entry()
             :base()
@@ -80,11 +91,12 @@ namespace Datas
             url = "no url";
             GeneratePassword(Entry.LenghtPassword, Entry.NbCaracSpec);
         }
-
+        
         /// <summary>
         /// Génère le mot de passe pour la clé courante
         /// </summary>
-        /// <param name="length"></param>
+        /// <param name="length">Longueur totale du mot de passe à générer</param>
+        /// <param name="nbCaracSpec">Nombre de caractères spéciaux pour le mot de passe à générer</param>
         public void GeneratePassword(int length, int nbCaracSpec)
         {
             IPasswordGenerator ipg = PasswordGeneratorFactory.Create();
@@ -99,6 +111,11 @@ namespace Datas
             }
         }
 
+
+        /// <summary>
+        /// Conversion de la classe Entry en string
+        /// </summary>
+        /// <returns>Chaîne représentant l'instance courante de la classe Entry</returns>
         public override string ToString()
         {
             StringBuilder chaine = new StringBuilder();

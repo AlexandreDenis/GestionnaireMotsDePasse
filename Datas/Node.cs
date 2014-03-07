@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Datas
 {
+    /// <summary>
+    /// Classe de base de chaque noeud de l'arborescence
+    /// </summary>
     [Serializable]
     public class Node
     {
@@ -29,6 +32,9 @@ namespace Datas
             set { title = value; }
         }
 
+        /// <summary>
+        /// Date de création de la clé
+        /// </summary>
         private DateTime dateCreation;
         public DateTime DateCreation
         {
@@ -36,6 +42,9 @@ namespace Datas
             set { dateCreation = value; }
         }
 
+        /// <summary>
+        /// Date de dernière modification de la clé
+        /// </summary>
         private DateTime dateModification;
         public DateTime DateModification
         {
@@ -45,7 +54,7 @@ namespace Datas
 
 
         /// <summary>
-        /// Constructeur par défaut
+        /// Constructeur par défaut de la classe Node
         /// </summary>
         public Node()
         {
@@ -56,10 +65,12 @@ namespace Datas
         }
 
         /// <summary>
-        /// Constructeur
+        /// Constructeur de la classe Node
         /// </summary>
-        /// <param name="inTitle"></param>
-        /// <param name="inExpiration"></param>
+        /// <param name="inTitle">Nom du noeud</param>
+        /// <param name="inExpiration">Date d'expiration du noeud</param>
+        /// <param name="inDateCreation">Date de création du noeud</param>
+        /// <param name="inDateModification">Date de dernière modification du noeud</param>
         public Node(string inTitle, Nullable<DateTime> inExpiration, DateTime inDateCreation, DateTime inDateModification)
         {
             title = inTitle;
@@ -68,6 +79,9 @@ namespace Datas
             dateModification = inDateModification;
         }
 
+        /// <summary>
+        /// Mise à jour de la date de dernière modification du noeud courant
+        /// </summary>
         public void UpdateDateModification()
         {
             dateModification = System.DateTime.Now;
